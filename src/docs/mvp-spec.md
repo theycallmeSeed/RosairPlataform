@@ -4,13 +4,11 @@
 
 Marketplace
 ↓
-Selecionar Produto
+Produto
 ↓
-Ver Detalhes
+Cotação
 ↓
-Solicitar Cotação
-↓
-Pedido Criado
+Roseair entra no processo
 
 ---
 

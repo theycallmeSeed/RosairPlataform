@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   ArrowUpDown,
   Boxes,
@@ -39,8 +40,9 @@ const formatCurrency = (value: number) =>
   }).format(value);
 
 export default function MarketplacePage() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
+  const [params] = useSearchParams();
+  const [search, setSearch] = useState(params.get("search") ?? "");
+  const [category, setCategory] = useState(params.get("category") ?? "All");
   const [selectedModes, setSelectedModes] = useState<string[]>([]);
   const [selectedCustoms, setSelectedCustoms] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("recommended");
@@ -88,13 +90,14 @@ export default function MarketplacePage() {
               <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
             </div>
           </Link>
+          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+            <Link className="transition hover:text-red-700" to="/buyer">Central do Comprador</Link>
+            <Link className="transition hover:text-red-700" to="/agent">Tornar-se Agente</Link>
+          </nav>
           <div className="flex items-center gap-3">
             <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">Moçambique + SADC</Badge>
             <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/agent">Painel do Agente</Link>
-            </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
-              <Link to="/marketplace">Explorar Marketplace</Link>
+              <Link to="/buyer">Central do Comprador</Link>
             </Button>
           </div>
         </div>
@@ -115,12 +118,12 @@ export default function MarketplacePage() {
                 <p className="text-xs font-medium text-slate-500">Produtos</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-red-700">4</p>
-                <p className="text-xs font-medium text-slate-500">Rotas comerciais</p>
+                <p className="text-2xl font-bold text-red-700">{new Set(products.map(p => p.agent)).size}</p>
+                <p className="text-xs font-medium text-slate-500">Fornecedores</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-red-700">3</p>
-                <p className="text-xs font-medium text-slate-500">Armazéns</p>
+                <p className="text-2xl font-bold text-red-700">{new Set(products.map(p => p.category)).size}</p>
+                <p className="text-xs font-medium text-slate-500">Categorias</p>
               </div>
             </div>
           </div>
@@ -219,6 +222,7 @@ export default function MarketplacePage() {
                   setSelectedModes([]);
                   setSelectedCustoms([]);
                   setSortBy("recommended");
+                  window.history.replaceState({}, "", "/marketplace");
                 }}
               >
                 Limpar filtros
@@ -226,19 +230,6 @@ export default function MarketplacePage() {
             </CardContent>
           </Card>
 
-          <Card className="border-slate-200 bg-white">
-            <CardContent className="space-y-4 p-5">
-              <div className="flex items-center gap-3">
-                <Warehouse className="h-5 w-5 text-red-700" />
-                <p className="font-semibold">Disponibilidade de armazém</p>
-              </div>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between"><span className="text-slate-500">Maputo Hub</span><span className="font-semibold">68%</span></div>
-                <div className="flex justify-between"><span className="text-slate-500">Matola Yard</span><span className="font-semibold">54%</span></div>
-                <div className="flex justify-between"><span className="text-slate-500">Beira Cross-Dock</span><span className="font-semibold">72%</span></div>
-              </div>
-            </CardContent>
-          </Card>
         </aside>
 
         <div className="space-y-6">
@@ -254,7 +245,7 @@ export default function MarketplacePage() {
             </div>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredProducts.map((product) => (
               <Card key={product.id} className="group overflow-hidden border-slate-200 bg-white transition hover:-translate-y-1 hover:border-red-200 hover:shadow-xl">
                 <div className="relative h-36 overflow-hidden bg-slate-100">
@@ -269,56 +260,35 @@ export default function MarketplacePage() {
                   </div>
                 </div>
 
-                <CardContent className="p-5">
-                  <div className="mb-3 flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="line-clamp-2 text-lg font-semibold text-slate-950">{product.name}</h3>
-                      <p className="mt-1 text-sm text-slate-500">{product.agent}</p>
+                <CardContent className="p-4">
+                  <div className="mb-2 flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-slate-950">{product.name}</h3>
+                      <p className="mt-0.5 text-xs text-slate-500">{product.agent}</p>
                     </div>
-                    <Badge variant="outline">{product.rating.toFixed(1)}</Badge>
+                    <Badge variant="outline" className="shrink-0 text-[10px]">{product.rating.toFixed(1)}</Badge>
                   </div>
 
-                  <div className="space-y-2 text-sm text-slate-600">
-                    <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-red-700" /> {product.origin}</div>
-                    <div className="flex items-center gap-2"><Ship className="h-4 w-4 text-red-700" /> {product.destination}</div>
-                    <div className="flex items-center gap-2"><Warehouse className="h-4 w-4 text-red-700" /> {product.warehouse}</div>
+                  <p className="flex items-center gap-1 text-xs text-slate-500"><MapPin className="h-3 w-3 text-red-700" /> {product.origin}</p>
+
+                  <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+                    <p><span className="text-slate-400">Preço </span><span className="font-semibold text-slate-950">{formatCurrency(product.price)}/{product.unit}</span></p>
+                    <p><span className="text-slate-400">MOQ </span><span className="font-semibold">{product.moq.toLocaleString()}</span></p>
+                    <p><span className="text-slate-400">Prazo </span><span className="font-semibold">{product.leadTimeDays}d</span></p>
+                    <p><span className="text-slate-400">{product.incoterm} </span><span className="font-semibold">{product.freightMode}</span></p>
                   </div>
 
-                  <Separator className="my-5" />
-
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-slate-500">Preço</p>
-                      <p className="font-bold text-slate-950">{formatCurrency(product.price)} / {product.unit}</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500">MOQ</p>
-                      <p className="font-bold text-slate-950">{product.moq.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500">Prazo</p>
-                      <p className="flex items-center gap-1 font-bold text-slate-950"><Clock3 className="h-4 w-4 text-red-700" /> {product.leadTimeDays} dias</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-500">Incoterm</p>
-                      <p className="font-bold text-slate-950">{product.incoterm}</p>
-                    </div>
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${product.stockStatus === "Pronto para envio" ? "border-emerald-200 text-emerald-700" : product.stockStatus === "Stock limitado" ? "border-amber-200 text-amber-700" : ""}`}>{product.stockStatus}</Badge>
+                    <Badge className="bg-red-50 text-red-700 hover:bg-red-50 text-[10px] px-1.5 py-0">{product.customsStatus === "Pré-desembaraçado" ? "Pré-desemb." : product.customsStatus === "Documentação pronta" ? "Doc. pronta" : "Rev. pautal"}</Badge>
                   </div>
 
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    <Badge variant="outline">{product.freightMode}</Badge>
-                    <Badge variant="outline">{product.stockStatus}</Badge>
-                    <Badge className="bg-red-50 text-red-700 hover:bg-red-50">{product.customsStatus}</Badge>
-                  </div>
-
-                  <div className="mt-6 grid grid-cols-2 gap-3">
-                    <Button asChild variant="outline" className="border-slate-300">
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <Button asChild variant="outline" className="h-8 text-xs border-slate-300">
                       <Link to={`/product/${product.id}`}>Detalhes</Link>
                     </Button>
-                    <Button asChild className="bg-red-700 hover:bg-red-800">
-                      <Link to={`/product/${product.id}`}>
-                        Solicitar Cotação <CheckCircle2 className="ml-2 h-4 w-4" />
-                      </Link>
+                    <Button asChild className="h-8 text-xs bg-red-700 hover:bg-red-800">
+                      <Link to={`/product/${product.id}`}>Cotação</Link>
                     </Button>
                   </div>
                 </CardContent>

@@ -64,18 +64,12 @@ export default function BuyerDashboardPage() {
               <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
             </div>
           </Link>
+          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+            <Link className="transition hover:text-red-700" to="/agent">Tornar-se Agente</Link>
+          </nav>
           <div className="flex items-center gap-3">
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/">Início</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/agent">Agente</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/admin">Admin</Link>
-            </Button>
             <Button asChild className="bg-red-700 hover:bg-red-800">
-              <Link to="/marketplace">Marketplace</Link>
+              <Link to="/marketplace">Explorar Produtos</Link>
             </Button>
           </div>
         </div>

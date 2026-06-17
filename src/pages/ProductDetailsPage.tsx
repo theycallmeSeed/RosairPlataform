@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, ClipboardCheck, MapPin, PackageCheck, ShieldCheck, Ship, Store, Warehouse } from "lucide-react";
+import { ArrowLeft, Boxes, CheckCircle2, ClipboardCheck, MapPin, PackageCheck, ShieldCheck, Ship, Store, Warehouse } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 
 import { products } from "@/data/products";
+
+const SAVED_KEY = "roseair_saved_products";
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("en-US", {
@@ -16,13 +19,36 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: value < 10 ? 2 : 0,
   }).format(value);
 
+function isSaved(productId: string): boolean {
+  try {
+    return (JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]") as string[]).includes(productId);
+  } catch {
+    return false;
+  }
+}
 
+function toggleSaved(productId: string): boolean {
+  const current: string[] = JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]");
+  const exists = current.includes(productId);
+  const next = exists ? current.filter((id) => id !== productId) : [...current, productId];
+  localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+  return !exists;
+}
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
+  const [qty, setQty] = useState(0);
   const product = products.find((p) => p.id === id);
+
+  useEffect(() => {
+    if (id) setSaved(isSaved(id));
+  }, [id]);
+
+  useEffect(() => {
+    if (product) setQty(product.moq);
+  }, [product]);
 
   if (!product) {
     return (
@@ -52,14 +78,12 @@ export default function ProductDetailsPage() {
               <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
             </div>
           </Link>
+          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+            <Link className="transition hover:text-red-700" to="/buyer">Central do Comprador</Link>
+            <Link className="transition hover:text-red-700" to="/agent">Tornar-se Agente</Link>
+          </nav>
           <div className="flex items-center gap-3">
             <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">Moçambique + SADC</Badge>
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/agent">Painel do Agente</Link>
-            </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
-              <Link to="/marketplace">Explorar Marketplace</Link>
-            </Button>
           </div>
         </div>
       </header>
@@ -81,6 +105,13 @@ export default function ProductDetailsPage() {
               </div>
               <h1 className="text-4xl font-bold tracking-tight">{product.name}</h1>
               <p className="mt-2 text-slate-600">ID do Produto: {product.id}</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <Badge variant="outline" className={`border-emerald-200 text-emerald-700 ${product.stockStatus !== "Pronto para envio" ? "hidden" : ""}`}>Pronto para envio</Badge>
+                <Badge variant="outline" className={`border-amber-200 text-amber-700 ${product.stockStatus !== "Stock limitado" ? "hidden" : ""}`}>Stock limitado</Badge>
+                <Badge variant="outline" className={`border-slate-200 text-slate-600 ${product.stockStatus !== "Em produção" ? "hidden" : ""}`}>Em produção</Badge>
+                <Badge className="bg-red-50 text-red-700 hover:bg-red-50">{product.customsStatus}</Badge>
+                <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">Verificado</Badge>
+              </div>
               <div className="mt-6 grid gap-4 sm:grid-cols-3">
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
                   <p className="text-sm text-slate-500">Preço</p>
@@ -95,19 +126,89 @@ export default function ProductDetailsPage() {
                   <p className="mt-1 text-xl font-bold">{product.leadTimeDays} dias</p>
                 </div>
               </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
+                  <CheckCircle2 className="h-4 w-4 text-red-700" />
+                  <div><p className="text-xs text-slate-500">Fornecedor</p><p className="font-medium">{product.agent}</p></div>
+                </div>
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
+                  <MapPin className="h-4 w-4 text-red-700" />
+                  <div><p className="text-xs text-slate-500">Origem</p><p className="font-medium">{product.origin}</p></div>
+                </div>
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
+                  <Warehouse className="h-4 w-4 text-red-700" />
+                  <div><p className="text-xs text-slate-500">Armazém</p><p className="font-medium">{product.warehouse}</p></div>
+                </div>
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
+                  <Ship className="h-4 w-4 text-red-700" />
+                  <div><p className="text-xs text-slate-500">Frete</p><p className="font-medium">{product.freightMode} · {product.incoterm}</p></div>
+                </div>
+              </div>
             </div>
             <Card className="border-red-100 bg-white">
               <CardHeader>
-                <CardTitle>Solicitar Cotação de Importação</CardTitle>
+                <CardTitle>Solicitar Cotação</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <Button className="w-full bg-red-700 hover:bg-red-800" onClick={() => navigate(`/quote/success?product=${product.id}`)}>
+              <CardContent className="space-y-5">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium">Quantidade desejada</p>
+                    <p className="text-xs text-slate-500">MOQ: {product.moq.toLocaleString()} {product.unit}(s)</p>
+                  </div>
+                  <div className="mt-2 flex items-center gap-3">
+                    <button
+                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+                      onClick={() => setQty(Math.max(1, qty - product.moq))}
+                    >−</button>
+                    <span className="min-w-[4rem] text-center text-2xl font-bold tabular-nums">{qty.toLocaleString()}</span>
+                    <button
+                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+                      onClick={() => setQty(qty + product.moq)}
+                    >+</button>
+                  </div>
+                  {qty < product.moq && (
+                    <p className="mt-2 text-xs font-medium text-amber-600">
+                      ⚠ Abaixo do MOQ. O fornecedor pode não aceitar esta quantidade.
+                    </p>
+                  )}
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Resumo da Cotação</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Produto</span>
+                      <span className="max-w-[180px] text-right font-medium">{product.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Fornecedor</span>
+                      <span className="font-medium">{product.agent}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Preço Unitário</span>
+                      <span className="font-medium">{formatCurrency(product.price)} / {product.unit}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-500">Quantidade</span>
+                      <span className="font-medium">{qty.toLocaleString()} {product.unit}(s)</span>
+                    </div>
+                  </div>
+                  <Separator className="my-3" />
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-semibold">Valor Estimado</span>
+                    <span className="text-xl font-bold text-red-700">{formatCurrency(product.price * qty)}</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-400">Esta é apenas uma estimativa. O valor final será definido na cotação formal.</p>
+
+                <Button className="w-full bg-red-700 hover:bg-red-800" onClick={() => navigate(`/quote/success?product=${product.id}&qty=${qty}`)}>
                   Solicitar Cotação
                 </Button>
-                <Button variant="outline" className="w-full border-slate-300" onClick={() => setSaved(true)} disabled={saved}>
+                <Button variant="outline" className="w-full border-slate-300" onClick={() => setSaved(toggleSaved(product.id))}>
                   {saved ? "Produto Guardado ✓" : "Guardar Produto"}
                 </Button>
-                <p className="text-sm leading-6 text-slate-500">A Roseair validará os termos do fornecedor, rota de frete, documentos aduaneiros e opções de recepção em armazém.</p>
               </CardContent>
             </Card>
           </div>
@@ -187,6 +288,55 @@ export default function ProductDetailsPage() {
             ))}
           </CardContent>
         </Card>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-12">
+        <h2 className="mb-6 flex items-center gap-2 text-lg font-bold">
+          <Boxes className="h-5 w-5 text-red-700" /> Outros Fornecedores
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {products
+            .filter((p) => p.category === product.category && p.agent !== product.agent)
+            .slice(0, 4)
+            .map((p) => (
+              <Link key={p.id} to={`/product/${p.id}`} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-lg">
+                <div className="relative h-28 overflow-hidden bg-slate-100">
+                  <img src={p.imageUrl} alt={p.name} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                </div>
+                <div className="p-3">
+                  <p className="line-clamp-2 text-xs font-semibold leading-snug">{p.name}</p>
+                  <p className="mt-0.5 text-[10px] text-slate-500">{p.agent}</p>
+                  <p className="mt-1 text-xs font-bold text-red-700">{formatCurrency(p.price)} <span className="font-normal text-slate-400">/{p.unit}</span></p>
+                </div>
+              </Link>
+            ))}
+        </div>
+        {products.filter((p) => p.category === product.category && p.agent !== product.agent).length === 0 && (
+          <p className="py-6 text-center text-sm text-slate-500">Nenhum outro fornecedor encontrado nesta categoria.</p>
+        )}
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-12">
+        <h2 className="mb-6 flex items-center gap-2 text-lg font-bold">
+          <Boxes className="h-5 w-5 text-red-700" /> Também Pode Interessar
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {products
+            .filter((p) => p.category !== product.category && p.id !== product.id)
+            .slice(0, 4)
+            .map((p) => (
+              <Link key={p.id} to={`/product/${p.id}`} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-lg">
+                <div className="relative h-28 overflow-hidden bg-slate-100">
+                  <img src={p.imageUrl} alt={p.name} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                </div>
+                <div className="p-3">
+                  <p className="line-clamp-2 text-xs font-semibold leading-snug">{p.name}</p>
+                  <p className="mt-0.5 text-[10px] text-slate-500">{p.agent}</p>
+                  <p className="mt-1 text-xs font-bold text-red-700">{formatCurrency(p.price)} <span className="font-normal text-slate-400">/{p.unit}</span></p>
+                </div>
+              </Link>
+            ))}
+        </div>
       </section>
     </main>
   );

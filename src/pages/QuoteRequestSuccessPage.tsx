@@ -1,15 +1,15 @@
 import { useSearchParams, Link } from "react-router-dom";
-import { CheckCircle2, Clock3, MapPin, PackageCheck, Ship, Store } from "lucide-react";
+import { Boxes, CheckCircle2, Clock3, MapPin, PackageCheck, Ship, Store } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { products } from "@/data/products";
 
-function estimateValue(id: string): string {
+function estimateValue(id: string, qty: number): string {
   const p = products.find((x) => x.id === id);
   if (!p) return "USD --";
-  return (p.price * p.moq).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  return (p.price * qty).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 }
 
 function daysForProduct(id: string): string {
@@ -36,14 +36,10 @@ export default function QuoteRequestSuccessPage() {
               <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
             </div>
           </Link>
-          <div className="flex items-center gap-3">
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/agent">Painel do Agente</Link>
-            </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
-              <Link to="/marketplace">Explorar Marketplace</Link>
-            </Button>
-          </div>
+          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
+            <Link className="transition hover:text-red-700" to="/buyer">Central do Comprador</Link>
+            <Link className="transition hover:text-red-700" to="/agent">Tornar-se Agente</Link>
+          </nav>
         </div>
       </header>
 
@@ -94,8 +90,8 @@ export default function QuoteRequestSuccessPage() {
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-red-50 p-4">
-              <p className="text-sm text-slate-500">Valor total estimado (MOQ base)</p>
-              <p className="mt-1 text-2xl font-bold text-red-700">{estimateValue(productId)}</p>
+              <p className="text-sm text-slate-500">Valor total estimado</p>
+              <p className="mt-1 text-2xl font-bold text-red-700">{estimateValue(productId, rawQty)}</p>
             </div>
 
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
@@ -133,6 +129,31 @@ export default function QuoteRequestSuccessPage() {
             </div>
           </CardContent>
         </Card>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6 pb-12">
+        <h2 className="mb-6 flex items-center gap-2 text-lg font-bold">
+          <Boxes className="h-5 w-5 text-red-700" /> Também Pode Interessar
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {products
+            .filter((p) => p.id !== productId)
+            .slice(0, 4)
+            .map((p) => (
+              <Link key={p.id} to={`/product/${p.id}`} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-lg">
+                <div className="relative h-28 overflow-hidden bg-slate-100">
+                  <img src={p.imageUrl} alt={p.name} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                </div>
+                <div className="p-3">
+                  <p className="line-clamp-2 text-xs font-semibold leading-snug">{p.name}</p>
+                  <p className="mt-0.5 text-[10px] text-slate-500">{p.agent}</p>
+                  <p className="mt-1 text-xs font-bold text-red-700">
+                    {(p.price * rawQty).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })}
+                  </p>
+                </div>
+              </Link>
+            ))}
+        </div>
       </section>
     </main>
   );
