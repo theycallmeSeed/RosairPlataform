@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Clock3, Heart, PackageCheck, ShoppingCart, Store } from "lucide-react";
+import { Heart, PackageCheck, ShoppingBag } from "lucide-react";
 
+import { SiteHeader } from "@/components/site-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import { products } from "@/data/products";
+import { getOrders, orderStatusLabel, type Order, type OrderStatus } from "@/lib/orders";
 
 const SAVED_KEY = "roseair_saved_products";
-const QUOTES_KEY = "roseair_quote_history";
 
-type QuoteRecord = {
-  productId: string;
-  quantity: number;
-  date: string;
-};
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: value < 10 ? 2 : 0,
+  }).format(value);
 
 function loadSaved(): string[] {
   try {
@@ -26,21 +28,20 @@ function loadSaved(): string[] {
   }
 }
 
-function loadQuotes(): QuoteRecord[] {
-  try {
-    return JSON.parse(localStorage.getItem(QUOTES_KEY) ?? "[]");
-  } catch {
-    return [];
-  }
-}
+const statusTone = (status: OrderStatus) => {
+  if (status === "Delivered") return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100";
+  if (status === "Cancelled") return "bg-red-100 text-red-700 hover:bg-red-100";
+  if (status === "PendingPayment") return "bg-amber-100 text-amber-700 hover:bg-amber-100";
+  return "bg-red-50 text-red-700 hover:bg-red-50";
+};
 
 export default function BuyerDashboardPage() {
   const [saved, setSaved] = useState<string[]>([]);
-  const [quotes, setQuotes] = useState<QuoteRecord[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     setSaved(loadSaved());
-    setQuotes(loadQuotes());
+    setOrders(getOrders());
   }, []);
 
   const removeSaved = (id: string) => {
@@ -53,38 +54,52 @@ export default function BuyerDashboardPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-700 text-white shadow-sm">
-              <Store className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-lg font-bold tracking-tight">Roseair</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
-            </div>
-          </Link>
-          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
-            <Link className="transition hover:text-red-700" to="/agent">Tornar-se Agente</Link>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Button asChild className="bg-red-700 hover:bg-red-800">
-              <Link to="/marketplace">Explorar Produtos</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
           <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Painel do Comprador</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">As Minhas Importações</h1>
-          <p className="mt-2 text-slate-600">Produtos guardados, cotações solicitadas e histórico de importação.</p>
+          <p className="mt-2 text-slate-600">Produtos guardados, encomendas em curso e histórico de compras.</p>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-8">
         <div className="grid gap-6 lg:grid-cols-2">
+          <Card className="border-slate-200 bg-white">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShoppingBag className="h-5 w-5 text-red-700" /> As Minhas Encomendas
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {orders.length === 0 && (
+                <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center">
+                  <PackageCheck className="mx-auto h-8 w-8 text-slate-300" />
+                  <p className="mt-3 font-medium text-slate-500">Ainda não fez nenhuma compra</p>
+                  <Button asChild className="mt-4 bg-red-700 hover:bg-red-800">
+                    <Link to="/">Explorar Marketplace</Link>
+                  </Button>
+                </div>
+              )}
+              {orders.map((order) => (
+                <Link
+                  key={order.id}
+                  to={`/orders/${order.id}`}
+                  className="block rounded-2xl border border-slate-200 p-4 transition hover:border-red-200 hover:shadow-sm"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="font-semibold">{order.orderNumber}</p>
+                      <p className="mt-1 text-sm text-slate-500">{order.lines.length} produto(s) • {formatCurrency(order.totalAmount)}</p>
+                    </div>
+                    <Badge className={statusTone(order.status)}>{orderStatusLabel(order.status)}</Badge>
+                  </div>
+                </Link>
+              ))}
+            </CardContent>
+          </Card>
+
           <Card className="border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -97,7 +112,7 @@ export default function BuyerDashboardPage() {
                   <Heart className="mx-auto h-8 w-8 text-slate-300" />
                   <p className="mt-3 font-medium text-slate-500">Nenhum produto guardado</p>
                   <Button asChild className="mt-4 bg-red-700 hover:bg-red-800">
-                    <Link to="/marketplace">Explorar Produtos</Link>
+                    <Link to="/">Explorar Produtos</Link>
                   </Button>
                 </div>
               )}
@@ -112,42 +127,6 @@ export default function BuyerDashboardPage() {
               ))}
             </CardContent>
           </Card>
-
-          <Card className="border-slate-200 bg-white">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5 text-red-700" /> Histórico de Cotações
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {quotes.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center">
-                  <PackageCheck className="mx-auto h-8 w-8 text-slate-300" />
-                  <p className="mt-3 font-medium text-slate-500">Nenhuma cotação solicitada</p>
-                  <Button asChild className="mt-4 bg-red-700 hover:bg-red-800">
-                    <Link to="/marketplace">Solicitar Cotação</Link>
-                  </Button>
-                </div>
-              )}
-              {quotes.map((q, i) => {
-                const p = products.find((x) => x.id === q.productId);
-                return (
-                  <div key={`${q.productId}-${i}`} className="rounded-2xl border border-slate-200 p-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <Link to={`/product/${q.productId}`} className="font-semibold transition hover:text-red-700">{p?.name ?? q.productId}</Link>
-                        <p className="mt-1 flex items-center gap-2 text-sm text-slate-500">
-                          <Clock3 className="h-3 w-3" /> {q.date}
-                        </p>
-                      </div>
-                      <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">Pendente</Badge>
-                    </div>
-                    <p className="mt-2 text-sm text-slate-500">Qtd: {q.quantity.toLocaleString()} {p?.unit ?? "unidade(s)"}</p>
-                  </div>
-                );
-              })}
-            </CardContent>
-          </Card>
         </div>
 
         <Separator className="my-8" />
@@ -156,7 +135,7 @@ export default function BuyerDashboardPage() {
           <h3 className="text-xl font-semibold text-red-900">Pronto para encontrar mais fornecedores?</h3>
           <p className="mt-2 text-red-900/70">Descubra milhares de produtos prontos para importar da China para Moçambique e SADC.</p>
           <Button asChild className="mt-6 bg-red-700 hover:bg-red-800">
-            <Link to="/marketplace">Explorar Marketplace</Link>
+            <Link to="/">Explorar Marketplace</Link>
           </Button>
         </div>
       </section>

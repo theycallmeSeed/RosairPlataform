@@ -1,313 +1,316 @@
-import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { type ReactNode, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
-  ArrowUpDown,
+  Battery,
   Boxes,
-  CheckCircle2,
   Clock3,
-  Filter,
-  MapPin,
-  PackageCheck,
+  Flame,
+  Hammer,
+  Leaf,
+  Plane,
+  Plug,
   Search,
+  Shirt,
   ShieldCheck,
-  Ship,
-  SlidersHorizontal,
-  Store,
-  Warehouse,
+  Sofa,
+  Sparkles,
+  Stethoscope,
+  Timer,
+  TrendingUp,
+  Truck,
+  Wrench,
+  Zap,
 } from "lucide-react";
 
-import { Link } from "react-router-dom";
+import { SiteHeader } from "@/components/site-header";
+import { ProductCard } from "@/components/product-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 
-import { products } from "@/data/products";
+import { products, type Product } from "@/data/products";
 
-const categories = ["All", "Energia", "Embalagens", "Armazenagem", "Peças Automóveis", "Serviços Alimentares", "Electrónica", "Construção", "Material Médico", "Agricultura", "Mobiliário", "Ferramentas e Ferragens", "Têxteis"];
-const categoryLabels: Record<string, string> = { All: "Todas" };
-const freightModes = ["Marítimo", "Aéreo", "Marítimo + Rodoviário"] as const;
-const customsStatuses = ["Pré-desembaraçado", "Documentação pronta", "Revisão pautal necessária"] as const;
+const categoryIcons: Record<string, typeof Boxes> = {
+  Energia: Zap,
+  Embalagens: Boxes,
+  Armazenagem: Boxes,
+  "Peças Automóveis": Wrench,
+  "Serviços Alimentares": Flame,
+  Electrónica: Plug,
+  Construção: Hammer,
+  "Material Médico": Stethoscope,
+  Agricultura: Leaf,
+  Mobiliário: Sofa,
+  "Ferramentas e Ferragens": Wrench,
+  Têxteis: Shirt,
+};
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: value < 10 ? 2 : 0,
-  }).format(value);
+const categoryTheme = [
+  "from-orange-500 to-red-600",
+  "from-red-500 to-rose-600",
+  "from-amber-500 to-orange-600",
+  "from-rose-500 to-red-700",
+  "from-orange-600 to-amber-500",
+  "from-red-600 to-orange-500",
+];
 
+/**
+ * A horizontal, snap-scrolling rail of product cards used for Flash Deals,
+ * Best Sellers and China Direct Imports — the "multiple horizontal product
+ * sections" requirement.
+ */
+function ProductRail({ items }: { items: Product[] }) {
+  return (
+    <div className="flex snap-x gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {items.map((product) => (
+        <ProductCard key={product.id} product={product} compact />
+      ))}
+    </div>
+  );
+}
+
+function SectionHeader({ eyebrow, title, icon, action }: { eyebrow: string; title: string; icon: ReactNode; action?: ReactNode }) {
+  return (
+    <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-600">
+          {icon} {eyebrow}
+        </span>
+        <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{title}</h2>
+      </div>
+      {action}
+    </div>
+  );
+}
+
+/**
+ * Homepage IS the Marketplace (business.md §6). This page is the discovery
+ * surface only — sections, banners, rails. Search/browsing with real filters
+ * lives on CatalogPage (/marketplace).
+ */
 export default function MarketplacePage() {
-  const [params] = useSearchParams();
-  const [search, setSearch] = useState(params.get("search") ?? "");
-  const [category, setCategory] = useState(params.get("category") ?? "All");
-  const [selectedModes, setSelectedModes] = useState<string[]>([]);
-  const [selectedCustoms, setSelectedCustoms] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("recommended");
+  const navigate = useNavigate();
+  const [heroSearch, setHeroSearch] = useState("");
 
-  const filteredProducts = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
+  const categoryCounts = useMemo(() => {
+    return products.reduce((acc, p) => {
+      acc[p.category] = (acc[p.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, []);
 
-    return products
-      .filter((product) => {
-        const matchesSearch =
-          normalizedSearch.length === 0 ||
-          [product.name, product.category, product.origin, product.destination, product.agent, product.incoterm]
-            .join(" ")
-            .toLowerCase()
-            .includes(normalizedSearch);
-        const matchesCategory = category === "All" || product.category === category;
-        const matchesMode = selectedModes.length === 0 || selectedModes.includes(product.freightMode);
-        const matchesCustoms = selectedCustoms.length === 0 || selectedCustoms.includes(product.customsStatus);
+  const categories = useMemo(
+    () => Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]).map(([name]) => name),
+    [categoryCounts],
+  );
 
-        return matchesSearch && matchesCategory && matchesMode && matchesCustoms;
-      })
-      .sort((a, b) => {
-        if (sortBy === "price-low") return a.price - b.price;
-        if (sortBy === "lead-time") return a.leadTimeDays - b.leadTimeDays;
-        if (sortBy === "rating") return b.rating - a.rating;
+  const flashDeals = useMemo(() => products.filter((p) => p.originalPrice && p.originalPrice > p.price), []);
+  const bestSellers = useMemo(() => [...products].sort((a, b) => b.rating - a.rating).slice(0, 10), []);
+  const newArrivals = useMemo(() => [...products].slice(-10).reverse(), []);
+  const recommended = useMemo(() => products.filter((p) => p.verified).slice(4, 14), []);
+  const chinaDirect = useMemo(() => [...products].sort((a, b) => a.leadTimeDays - b.leadTimeDays).slice(0, 10), []);
+  const recentlyAdded = useMemo(() => [...products].slice(-8).reverse(), []);
+  const popularCategories = useMemo(() => categories.slice(0, 6), [categories]);
 
-        return Number(b.verified) - Number(a.verified) || b.rating - a.rating;
-      });
-  }, [category, search, selectedCustoms, selectedModes, sortBy]);
-
-  const toggleValue = (value: string, values: string[], setValues: (next: string[]) => void) => {
-    setValues(values.includes(value) ? values.filter((item) => item !== value) : [...values, value]);
+  const handleHeroSearch = () => {
+    navigate(heroSearch.trim() ? `/marketplace?search=${encodeURIComponent(heroSearch.trim())}` : "/marketplace");
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-700 text-white shadow-sm">
-              <Store className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-lg font-bold tracking-tight">Roseair</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
-            </div>
-          </Link>
-          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
-            <Link className="transition hover:text-red-700" to="/buyer">Central do Comprador</Link>
-            <Link className="transition hover:text-red-700" to="/agent">Tornar-se Agente</Link>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">Moçambique + SADC</Badge>
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/buyer">Central do Comprador</Link>
+    <main className="min-h-screen bg-gradient-to-b from-orange-50/60 via-white to-white text-slate-950">
+      <SiteHeader />
+
+      {/* 1. Hero Search */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-red-700 via-orange-600 to-amber-500 py-14 text-white sm:py-20">
+        <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-yellow-300/20 blur-3xl" />
+        <div className="relative mx-auto max-w-5xl px-6 text-center">
+          <Badge className="bg-white/20 text-white hover:bg-white/20">🇲🇿 O maior marketplace de importação de Moçambique</Badge>
+          <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
+            Compre o mundo.<br /> Entregue em Moçambique.
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/90 sm:text-xl">
+            Milhares de produtos da China com preço final, envio incluído e cada compra supervisionada pela Roseair — do pagamento à entrega.
+          </p>
+
+          <div className="mx-auto mt-8 flex max-w-2xl items-center gap-2 rounded-full bg-white p-2 shadow-2xl">
+            <Search className="ml-3 h-6 w-6 shrink-0 text-orange-500" />
+            <Input
+              value={heroSearch}
+              onChange={(e) => setHeroSearch(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleHeroSearch()}
+              className="h-12 border-0 bg-transparent text-base text-slate-900 shadow-none focus-visible:ring-0"
+              placeholder="Painéis solares, smartphones, peças auto..."
+            />
+            <Button onClick={handleHeroSearch} className="h-12 shrink-0 rounded-full bg-gradient-to-r from-orange-600 to-red-600 px-6 text-sm font-bold hover:from-orange-700 hover:to-red-700">
+              Pesquisar
             </Button>
           </div>
-        </div>
-      </header>
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-8">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
-            <div>
-              <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Roseair Marketplace</Badge>
-              <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Produtos prontos para importar da China</h1>
-              <p className="mt-3 max-w-2xl text-slate-600">
-                Pesquise anúncios de agentes verificados com rotas logísticas, prontidão aduaneira e disponibilidade de armazém para Moçambique e região SADC.
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-3 rounded-2xl border border-red-100 bg-red-50 p-4 text-center">
-              <div>
-                <p className="text-2xl font-bold text-red-700">{products.length}</p>
-                <p className="text-xs font-medium text-slate-500">Produtos</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-red-700">{new Set(products.map(p => p.agent)).size}</p>
-                <p className="text-xs font-medium text-slate-500">Fornecedores</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-red-700">{new Set(products.map(p => p.category)).size}</p>
-                <p className="text-xs font-medium text-slate-500">Categorias</p>
-              </div>
-            </div>
-          </div>
 
-          <div className="mt-8 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm lg:flex-row lg:items-center">
-            <div className="flex flex-1 items-center gap-2 rounded-xl bg-slate-50 px-3">
-              <Search className="h-5 w-5 text-slate-400" />
-              <Input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                className="border-0 bg-transparent shadow-none focus-visible:ring-0"
-                placeholder="Pesquisar produtos, fornecedores, origem, palavras-chave HS..."
-              />
-            </div>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full lg:w-56">
-                <SelectValue placeholder="Categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((item) => (
-                  <SelectItem key={item} value={item}>{categoryLabels[item] ?? item}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full lg:w-52">
-                <ArrowUpDown className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Ordenar por" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recommended">Recomendado</SelectItem>
-                <SelectItem value="price-low">Menor preço</SelectItem>
-                <SelectItem value="lead-time">Prazo mais curto</SelectItem>
-                <SelectItem value="rating">Melhor classificado</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm font-semibold text-white/90">
+            <span className="flex items-center gap-1.5"><Boxes className="h-4 w-4" /> {products.length}+ produtos</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck className="h-4 w-4" /> {new Set(products.map((p) => p.agent)).size} agentes aprovados</span>
+            <span className="flex items-center gap-1.5"><Truck className="h-4 w-4" /> Envio sempre incluído</span>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[280px_1fr]">
-        <aside className="space-y-5">
-          <Card className="border-slate-200 bg-white">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <SlidersHorizontal className="h-5 w-5 text-red-700" />
-                Filtros
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Ship className="h-4 w-4 text-red-700" /> Modo de frete
-                </div>
-                <div className="space-y-3">
-                  {freightModes.map((mode) => (
-                    <label key={mode} className="flex cursor-pointer items-center gap-3 text-sm text-slate-600">
-                      <Checkbox checked={selectedModes.includes(mode)} onCheckedChange={() => toggleValue(mode, selectedModes, setSelectedModes)} />
-                      {mode}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-
-              <div>
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <ShieldCheck className="h-4 w-4 text-red-700" /> Prontidão aduaneira
-                </div>
-                <div className="space-y-3">
-                  {customsStatuses.map((status) => (
-                    <label key={status} className="flex cursor-pointer items-center gap-3 text-sm text-slate-600">
-                      <Checkbox checked={selectedCustoms.includes(status)} onCheckedChange={() => toggleValue(status, selectedCustoms, setSelectedCustoms)} />
-                      {status}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="rounded-2xl bg-red-50 p-4">
-                <div className="flex items-center gap-2 font-semibold text-red-800">
-                  <Filter className="h-4 w-4" /> Apoio à importação
-                </div>
-                <p className="mt-2 text-sm leading-6 text-red-900/70">Todos os anúncios incluem coordenação logística Roseair, revisão de documentos aduaneiros e opções de roteamento de armazém.</p>
-              </div>
-
-              <Button
-                variant="outline"
-                className="w-full border-slate-300"
-                onClick={() => {
-                  setSearch("");
-                  setCategory("All");
-                  setSelectedModes([]);
-                  setSelectedCustoms([]);
-                  setSortBy("recommended");
-                  window.history.replaceState({}, "", "/marketplace");
-                }}
+      {/* 2. Categories (quick nav) */}
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12">
+          {categories.map((cat) => {
+            const Icon = categoryIcons[cat] ?? Boxes;
+            return (
+              <Link
+                key={cat}
+                to={`/marketplace?category=${encodeURIComponent(cat)}`}
+                className="group flex flex-col items-center gap-2 rounded-2xl border border-orange-100 bg-white p-3 text-center transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-lg"
               >
-                Limpar filtros
-              </Button>
-            </CardContent>
-          </Card>
-
-        </aside>
-
-        <div className="space-y-6">
-          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-            <div>
-              <p className="text-sm font-medium text-slate-500">A mostrar {filteredProducts.length} de {products.length} produtos</p>
-              <h2 className="mt-1 text-2xl font-bold tracking-tight">Ofertas verificadas do marketplace</h2>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {category !== "All" && <Badge className="bg-red-100 text-red-800 hover:bg-red-100">{category}</Badge>}
-              {selectedModes.map((mode) => <Badge key={mode} variant="outline">{mode}</Badge>)}
-              {selectedCustoms.map((status) => <Badge key={status} variant="outline">{status}</Badge>)}
-            </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredProducts.map((product) => (
-              <Card key={product.id} className="group overflow-hidden border-slate-200 bg-white transition hover:-translate-y-1 hover:border-red-200 hover:shadow-xl">
-                <div className="relative h-36 overflow-hidden bg-slate-100">
-                  <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                  <div className="absolute left-4 top-4 flex gap-2">
-                    <Badge className="bg-white text-red-700 shadow-sm hover:bg-white">{product.category}</Badge>
-                    {product.verified && <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">Verificado</Badge>}
-                  </div>
-                  <div className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-red-700 shadow-sm">
-                    <Boxes className="h-6 w-6" />
-                  </div>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-100 to-red-100 text-orange-600 transition group-hover:from-orange-600 group-hover:to-red-600 group-hover:text-white">
+                  <Icon className="h-6 w-6" />
                 </div>
-
-                <CardContent className="p-4">
-                  <div className="mb-2 flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-slate-950">{product.name}</h3>
-                      <p className="mt-0.5 text-xs text-slate-500">{product.agent}</p>
-                    </div>
-                    <Badge variant="outline" className="shrink-0 text-[10px]">{product.rating.toFixed(1)}</Badge>
-                  </div>
-
-                  <p className="flex items-center gap-1 text-xs text-slate-500"><MapPin className="h-3 w-3 text-red-700" /> {product.origin}</p>
-
-                  <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-                    <p><span className="text-slate-400">Preço </span><span className="font-semibold text-slate-950">{formatCurrency(product.price)}/{product.unit}</span></p>
-                    <p><span className="text-slate-400">MOQ </span><span className="font-semibold">{product.moq.toLocaleString()}</span></p>
-                    <p><span className="text-slate-400">Prazo </span><span className="font-semibold">{product.leadTimeDays}d</span></p>
-                    <p><span className="text-slate-400">{product.incoterm} </span><span className="font-semibold">{product.freightMode}</span></p>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${product.stockStatus === "Pronto para envio" ? "border-emerald-200 text-emerald-700" : product.stockStatus === "Stock limitado" ? "border-amber-200 text-amber-700" : ""}`}>{product.stockStatus}</Badge>
-                    <Badge className="bg-red-50 text-red-700 hover:bg-red-50 text-[10px] px-1.5 py-0">{product.customsStatus === "Pré-desembaraçado" ? "Pré-desemb." : product.customsStatus === "Documentação pronta" ? "Doc. pronta" : "Rev. pautal"}</Badge>
-                  </div>
-
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <Button asChild variant="outline" className="h-8 text-xs border-slate-300">
-                      <Link to={`/product/${product.id}`}>Detalhes</Link>
-                    </Button>
-                    <Button asChild className="h-8 text-xs bg-red-700 hover:bg-red-800">
-                      <Link to={`/product/${product.id}`}>Cotação</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {filteredProducts.length === 0 && (
-            <Card className="border-dashed border-slate-300 bg-white">
-              <CardContent className="flex flex-col items-center justify-center px-6 py-16 text-center">
-                <PackageCheck className="h-12 w-12 text-red-700" />
-                <h3 className="mt-4 text-xl font-semibold">Nenhum produto correspondente</h3>
-                <p className="mt-2 max-w-md text-sm text-slate-500">Ajuste a sua pesquisa, categoria, modo de frete ou filtros de prontidão aduaneira para ver mais ofertas prontas para importar.</p>
-                <Button className="mt-6 bg-red-700 hover:bg-red-800" onClick={() => setSearch("")}>Limpar pesquisa</Button>
-              </CardContent>
-            </Card>
-          )}
+                <p className="line-clamp-2 text-[11px] font-semibold leading-tight text-slate-700">{cat}</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
+
+      {/* 3. Main Promotional Banner */}
+      <section className="mx-auto max-w-7xl px-6 pb-10">
+        <div className="grid gap-4 lg:grid-cols-3">
+          <Link
+            to="/marketplace?category=Energia"
+            className="group relative col-span-2 flex min-h-[220px] flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-orange-600 via-red-600 to-rose-700 p-8 text-white shadow-xl"
+          >
+            <Sparkles className="pointer-events-none absolute right-8 top-8 h-24 w-24 text-white/15 transition group-hover:scale-110" />
+            <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Campanha da Semana</Badge>
+            <h3 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Energia Solar até -30%</h3>
+            <p className="mt-2 max-w-md text-white/90">Painéis, inversores e baterias prontos para envio, com preço final e supervisão Roseair.</p>
+            <span className="mt-4 inline-flex w-fit items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-bold text-red-700">Ver Ofertas →</span>
+          </Link>
+
+          <div className="grid grid-rows-2 gap-4">
+            <Link to="/marketplace?category=Electrónica" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-orange-600 p-6 text-white shadow-lg">
+              <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Novidade</Badge>
+              <h4 className="mt-2 text-xl font-extrabold">Electrónica Directa da China</h4>
+              <span className="mt-2 text-xs font-bold text-white/90">Explorar →</span>
+            </Link>
+            <Link to="/marketplace?category=Construção" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-rose-600 to-red-700 p-6 text-white shadow-lg">
+              <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Grandes Volumes</Badge>
+              <h4 className="mt-2 text-xl font-extrabold">Materiais de Construção</h4>
+              <span className="mt-2 text-xs font-bold text-white/90">Explorar →</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Flash Deals */}
+      <section className="border-y border-orange-100 bg-gradient-to-r from-red-50 via-orange-50 to-amber-50 py-10">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeader
+            eyebrow="Por tempo limitado"
+            title="Ofertas Relâmpago"
+            icon={<Timer className="h-4 w-4" />}
+            action={
+              <span className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-xs font-bold text-white shadow-sm">
+                <Clock3 className="h-3.5 w-3.5" /> Termina em breve
+              </span>
+            }
+          />
+          <ProductRail items={flashDeals} />
+        </div>
+      </section>
+
+      {/* 5. Best Sellers */}
+      <section className="mx-auto max-w-7xl px-6 py-10">
+        <SectionHeader eyebrow="Os favoritos dos compradores" title="Mais Vendidos" icon={<TrendingUp className="h-4 w-4" />} />
+        <ProductRail items={bestSellers} />
+      </section>
+
+      {/* 6. New Arrivals */}
+      <section className="bg-slate-50 py-10">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeader eyebrow="Acabaram de chegar" title="Novidades" icon={<Sparkles className="h-4 w-4" />} />
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {newArrivals.map((product) => <ProductCard key={product.id} product={product} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Popular Categories */}
+      <section className="mx-auto max-w-7xl px-6 py-10">
+        <SectionHeader eyebrow="Onde toda a gente está a comprar" title="Categorias Populares" icon={<Boxes className="h-4 w-4" />} />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {popularCategories.map((cat, i) => {
+            const sample = products.find((p) => p.category === cat);
+            return (
+              <Link
+                key={cat}
+                to={`/marketplace?category=${encodeURIComponent(cat)}`}
+                className={`group relative flex h-40 items-end overflow-hidden rounded-3xl bg-gradient-to-br ${categoryTheme[i % categoryTheme.length]} p-5 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl`}
+              >
+                {sample && (
+                  <img src={sample.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover opacity-30 transition group-hover:opacity-40" />
+                )}
+                <div className="relative">
+                  <p className="text-xl font-black">{cat}</p>
+                  <p className="text-xs font-semibold text-white/90">{categoryCounts[cat]} produtos</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 8. Recommended Products */}
+      <section className="bg-slate-50 py-10">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeader eyebrow="Escolhidos para si" title="Recomendados" icon={<Sparkles className="h-4 w-4" />} />
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {recommended.map((product) => <ProductCard key={product.id} product={product} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. China Direct Imports */}
+      <section className="border-y border-red-100 bg-gradient-to-r from-red-700 via-red-600 to-orange-600 py-10 text-white">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeader
+            eyebrow="Sem intermediários"
+            title="Importação Directa da China"
+            icon={<Plane className="h-4 w-4" />}
+            action={<span className="text-xs font-semibold text-white/80">Fornecedores verificados · Preço final · Envio incluído</span>}
+          />
+          <ProductRail items={chinaDirect} />
+        </div>
+      </section>
+
+      {/* 10. Recently Added */}
+      <section className="mx-auto max-w-7xl px-6 py-10">
+        <SectionHeader eyebrow="Frescos no catálogo" title="Adicionados Recentemente" icon={<Battery className="h-4 w-4" />} />
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {recentlyAdded.map((product) => <ProductCard key={product.id} product={product} />)}
+        </div>
+        <div className="mt-8 flex justify-center">
+          <Button asChild className="h-12 rounded-full bg-gradient-to-r from-orange-600 to-red-600 px-8 text-sm font-bold hover:from-orange-700 hover:to-red-700">
+            <Link to="/marketplace">Ver Catálogo Completo</Link>
+          </Button>
+        </div>
+      </section>
+
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 md:flex-row">
+          <div className="flex items-center gap-2 text-xs text-slate-400">
+            <ShieldCheck className="h-4 w-4 text-orange-600" />
+            Linkano — powered by Roseair. Pagamento, logística, armazenagem e desembaraço garantidos.
+          </div>
+          <div className="flex items-center gap-4 text-xs text-slate-400">
+            <Link className="transition hover:text-orange-600" to="/buyer">A Minha Conta</Link>
+            <Link className="transition hover:text-orange-600" to="/agent">Vender no Linkano</Link>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

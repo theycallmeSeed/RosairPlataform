@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AlertTriangle, ArrowRight, Building2, ClipboardCheck, FileText, ShieldCheck, Ship, Store, UserCheck, Users } from "lucide-react";
+import { AlertTriangle, ArrowRight, Building2, ClipboardCheck, PackageSearch, ShieldCheck, Ship, UserCheck, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,12 +12,12 @@ export default function AdminDashboardPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-700 text-white shadow-sm">
-              <Store className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+              L
             </div>
             <div>
-              <p className="text-lg font-bold tracking-tight">Roseair</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
+              <p className="text-lg font-bold tracking-tight">Linkano</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
@@ -64,21 +64,37 @@ export default function AdminDashboardPage() {
           })}
         </div>
 
-        <div className="mt-6 grid gap-5 md:grid-cols-2">
+        <div className="mt-6 grid gap-5 md:grid-cols-3">
           <Card className="border-red-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-700">
-                    <FileText className="h-6 w-6" />
+                    <PackageSearch className="h-6 w-6" />
                   </div>
-                  <h3 className="mt-5 text-xl font-semibold">Gestão de Cotações</h3>
-                  <p className="mt-2 text-sm text-slate-500">Revise e aprove solicitações de cotação dos compradores do marketplace.</p>
+                  <h3 className="mt-5 text-xl font-semibold">Aprovação de Produtos</h3>
+                  <p className="mt-2 text-sm text-slate-500">Reveja produtos submetidos pelos agentes e aprove antes da publicação no marketplace.</p>
                 </div>
-                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">3 pendentes</Badge>
               </div>
               <Button asChild className="mt-6 w-full bg-red-700 hover:bg-red-800">
-                <Link to="/admin/quotes">Gerir Cotações <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link to="/admin/products">Rever Produtos <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="border-red-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-700">
+                    <Ship className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-5 text-xl font-semibold">Encomendas & Pagamentos</h3>
+                  <p className="mt-2 text-sm text-slate-500">Supervisione encomendas e reconcilie pagamentos por transferência bancária.</p>
+                </div>
+              </div>
+              <Button asChild className="mt-6 w-full bg-red-700 hover:bg-red-800">
+                <Link to="/admin/orders">Gerir Encomendas <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </CardContent>
           </Card>
@@ -91,9 +107,8 @@ export default function AdminDashboardPage() {
                     <UserCheck className="h-6 w-6" />
                   </div>
                   <h3 className="mt-5 text-xl font-semibold">Aprovação de Agentes</h3>
-                  <p className="mt-2 text-sm text-slate-500">Valide e aprove agentes chineses que solicitaram registo no marketplace.</p>
+                  <p className="mt-2 text-sm text-slate-500">Valide e aprove agentes que solicitaram registo no marketplace.</p>
                 </div>
-                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100">3 pendentes</Badge>
               </div>
               <Button asChild className="mt-6 w-full bg-red-700 hover:bg-red-800">
                 <Link to="/admin/agents">Aprovar Agentes <ArrowRight className="ml-2 h-4 w-4" /></Link>

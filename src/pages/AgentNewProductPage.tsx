@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, ImagePlus, Store, X } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock3, ImagePlus, X } from "lucide-react";
 
+import { SiteHeader } from "@/components/site-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,46 +11,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 
-export type AgentProduct = {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  brand: string;
-  model: string;
-  originCountry: string;
-  price: number;
-  moq: number;
-  monthlyCapacity: number;
-  leadTimeDays: number;
-  freightMode: string;
-  destinationWarehouse: string;
-  stockStatus: string;
-  documents: string[];
-  imageUrl: string;
-  status: "rascunho" | "publicado";
-  createdAt: string;
-};
+import { createAgentProduct } from "@/lib/agentProducts";
 
 const categories = ["Energia", "Embalagens", "Armazenagem", "Peças Automóveis", "Serviços Alimentares", "Electrónica", "Construção", "Material Médico", "Agricultura", "Mobiliário", "Ferramentas e Ferragens", "Têxteis"];
 const freightModes = ["Marítimo", "Aéreo", "Marítimo + Rodoviário"];
 const warehouses = ["Centro Logístico de Maputo", "Parque Logístico da Matola", "Plataforma Logística da Beira"];
 const stockStatuses = ["Stock Disponível", "Em Produção", "Stock Limitado"];
 const docOptions = ["Certificado de Origem", "Fatura Comercial", "Packing List"];
-
-const STORAGE_KEY = "roseair_agent_products";
-
-function loadProducts(): AgentProduct[] {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveProducts(products: AgentProduct[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-}
 
 export default function AgentNewProductPage() {
   const navigate = useNavigate();
@@ -60,7 +28,7 @@ export default function AgentNewProductPage() {
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [originCountry, setOriginCountry] = useState("");
-  const [price, setPrice] = useState("");
+  const [supplierCost, setSupplierCost] = useState("");
   const [moq, setMoq] = useState("");
   const [monthlyCapacity, setMonthlyCapacity] = useState("");
   const [leadTimeDays, setLeadTimeDays] = useState("");
@@ -69,7 +37,7 @@ export default function AgentNewProductPage() {
   const [stockStatus, setStockStatus] = useState("");
   const [documents, setDocuments] = useState<string[]>([]);
   const [imagePreview, setImagePreview] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const toggleDoc = (doc: string) => {
     setDocuments((prev) => prev.includes(doc) ? prev.filter((d) => d !== doc) : [...prev, doc]);
@@ -81,21 +49,19 @@ export default function AgentNewProductPage() {
 
   const isFormValid = () => {
     return name && category && description && brand && model && originCountry &&
-      price && moq && monthlyCapacity && leadTimeDays &&
+      supplierCost && moq && monthlyCapacity && leadTimeDays &&
       freightMode && destinationWarehouse && stockStatus;
   };
 
-  const save = (status: "rascunho" | "publicado") => {
-    const existing = loadProducts();
-    const newProduct: AgentProduct = {
-      id: `AGT-PRD-${String(existing.length + 1).padStart(3, "0")}`,
+  const handleSubmit = () => {
+    createAgentProduct({
       name,
       category,
       description,
       brand,
       model,
       originCountry,
-      price: Number(price),
+      supplierCost: Number(supplierCost),
       moq: Number(moq),
       monthlyCapacity: Number(monthlyCapacity),
       leadTimeDays: Number(leadTimeDays),
@@ -104,27 +70,22 @@ export default function AgentNewProductPage() {
       stockStatus,
       documents,
       imageUrl: imagePreview,
-      status,
-      createdAt: new Date().toISOString().split("T")[0],
-    };
-    saveProducts([...existing, newProduct]);
-    if (status === "publicado") {
-      setSuccess(true);
-      setTimeout(() => navigate("/agent"), 2000);
-    } else {
-      navigate("/agent");
-    }
+    });
+    setSubmitted(true);
+    setTimeout(() => navigate("/agent"), 2200);
   };
 
-  if (success) {
+  if (submitted) {
     return (
       <main className="min-h-screen bg-slate-50 text-slate-950">
         <section className="mx-auto flex max-w-lg flex-col items-center px-6 py-32 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
-            <CheckCircle2 className="h-10 w-10 text-emerald-600" />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-100">
+            <Clock3 className="h-10 w-10 text-amber-600" />
           </div>
-          <h1 className="mt-8 text-3xl font-bold tracking-tight">Produto publicado com sucesso</h1>
-          <p className="mt-4 text-slate-600">O seu produto aparecerá imediatamente no painel do agente e ficará visível no marketplace.</p>
+          <h1 className="mt-8 text-3xl font-bold tracking-tight">Produto submetido para aprovação</h1>
+          <p className="mt-4 text-slate-600">
+            A Roseair irá rever o produto, calcular o preço final de marketplace (frete, desalfandegamento, comissão) e aprová-lo antes de ficar visível aos compradores.
+          </p>
           <Button asChild className="mt-8 bg-red-700 hover:bg-red-800">
             <Link to="/agent">Voltar ao Painel do Agente</Link>
           </Button>
@@ -135,42 +96,18 @@ export default function AgentNewProductPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-700 text-white shadow-sm">
-              <Store className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-lg font-bold tracking-tight">Roseair</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
-            </div>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/">Início</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/admin">Admin</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-slate-300">
-              <Link to="/buyer">Comprador</Link>
-            </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
-              <Link to="/marketplace">Marketplace</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-5xl px-6 py-8">
           <Button asChild variant="ghost" className="mb-6 text-red-700 hover:bg-red-50 hover:text-red-800">
             <Link to="/agent"><ArrowLeft className="mr-2 h-4 w-4" /> Voltar ao Painel</Link>
           </Button>
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Publicar Produto</Badge>
+          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Submeter Produto</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Novo Produto</h1>
-          <p className="mt-2 text-slate-600">Preencha os detalhes do produto para publicar no marketplace Roseair.</p>
+          <p className="mt-2 text-slate-600">
+            Preencha os detalhes do produto. A Roseair calcula o preço final de marketplace e aprova antes da publicação — os agentes não publicam directamente.
+          </p>
         </div>
       </section>
 
@@ -221,11 +158,14 @@ export default function AgentNewProductPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="text-xl">Comercial</CardTitle>
+              <p className="text-sm text-slate-500">
+                Indique apenas o seu custo de fornecedor. A Roseair adiciona frete, CBM, custos operacionais, seguro e comissão para calcular o preço final de marketplace — nunca visível ao comprador.
+              </p>
             </CardHeader>
             <CardContent className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">Preço Unitário (USD) *</label>
-                <Input type="number" min={0} value={price} onChange={(e) => setPrice(e.target.value)} placeholder="0.00" />
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">Custo de Fornecedor (USD) *</label>
+                <Input type="number" min={0} value={supplierCost} onChange={(e) => setSupplierCost(e.target.value)} placeholder="0.00" />
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">Quantidade Mínima (MOQ) *</label>
@@ -340,11 +280,8 @@ export default function AgentNewProductPage() {
           <Separator />
 
           <div className="flex flex-col gap-3 pb-12 sm:flex-row sm:justify-end">
-            <Button variant="outline" className="border-slate-300" onClick={() => save("rascunho")} disabled={!isFormValid()}>
-              Guardar Rascunho
-            </Button>
-            <Button className="bg-red-700 hover:bg-red-800" onClick={() => save("publicado")} disabled={!isFormValid()}>
-              <CheckCircle2 className="mr-2 h-4 w-4" /> Publicar Produto
+            <Button className="bg-red-700 hover:bg-red-800" onClick={handleSubmit} disabled={!isFormValid()}>
+              <CheckCircle2 className="mr-2 h-4 w-4" /> Submeter para Aprovação
             </Button>
           </div>
         </div>

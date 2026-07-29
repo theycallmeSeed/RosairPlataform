@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Building2, CheckCircle2, Clock3, MapPin, Search, ShieldCheck, Store, XCircle } from "lucide-react";
+import { Building2, CheckCircle2, Clock3, MapPin, Search, ShieldCheck, XCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,12 +56,12 @@ export default function AgentApprovalPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-700 text-white shadow-sm">
-              <Store className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+              L
             </div>
             <div>
-              <p className="text-lg font-bold tracking-tight">Roseair</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
+              <p className="text-lg font-bold tracking-tight">Linkano</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
@@ -79,7 +79,7 @@ export default function AgentApprovalPage() {
         <div className="mx-auto max-w-7xl px-6 py-8">
           <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Aprovação de Agentes</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Fila de Aprovação de Agentes</h1>
-          <p className="mt-2 text-slate-600">Revise e aprove agentes chineses que solicitaram registo no marketplace Roseair.</p>
+          <p className="mt-2 text-slate-600">Revise e aprove agentes que solicitaram registo no marketplace Linkano, supervisionado pela Roseair.</p>
 
           {pendingCount > 0 && (
             <div className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800">
