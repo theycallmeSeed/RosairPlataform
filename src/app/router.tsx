@@ -1,33 +1,51 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import AdminDashboardPage from "@/pages/AdminDashboardPage";
-import AdminQuotesPage from "@/pages/AdminQuotesPage";
+import AdminOrdersPage from "@/pages/AdminOrdersPage";
+import AdminProductReviewPage from "@/pages/AdminProductReviewPage";
 import AgentApprovalPage from "@/pages/AgentApprovalPage";
 import AgentDashboardPage from "@/pages/AgentDashboardPage";
 import AgentNewProductPage from "@/pages/AgentNewProductPage";
 import AnalyticsDashboardPage from "@/pages/AnalyticsDashboardPage";
 import BuyerDashboardPage from "@/pages/BuyerDashboardPage";
-import LandingPage from "@/pages/LandingPage";
+import CartPage from "@/pages/CartPage";
+import CatalogPage from "@/pages/CatalogPage";
+import CheckoutConfirmationPage from "@/pages/CheckoutConfirmationPage";
+import CheckoutPage from "@/pages/CheckoutPage";
 import MarketplacePage from "@/pages/MarketplacePage";
+import OrderTrackingPage from "@/pages/OrderTrackingPage";
 import ProductDetailsPage from "@/pages/ProductDetailsPage";
-import QuoteRequestSuccessPage from "@/pages/QuoteRequestSuccessPage";
 
 export const router = createBrowserRouter([
   {
+    // Homepage IS the Marketplace (business.md §6) — no separate landing page.
     path: "/",
-    element: <LandingPage />,
+    element: <MarketplacePage />,
   },
   {
+    // The full, filterable "shop everything" catalog — reached from search/category clicks.
     path: "/marketplace",
-    element: <MarketplacePage />,
+    element: <CatalogPage />,
   },
   {
     path: "/product/:id",
     element: <ProductDetailsPage />,
   },
   {
-    path: "/quote/success",
-    element: <QuoteRequestSuccessPage />,
+    path: "/cart",
+    element: <CartPage />,
+  },
+  {
+    path: "/checkout",
+    element: <CheckoutPage />,
+  },
+  {
+    path: "/checkout/confirmation",
+    element: <CheckoutConfirmationPage />,
+  },
+  {
+    path: "/orders/:id",
+    element: <OrderTrackingPage />,
   },
   {
     path: "/agent",
@@ -42,8 +60,12 @@ export const router = createBrowserRouter([
     element: <AdminDashboardPage />,
   },
   {
-    path: "/admin/quotes",
-    element: <AdminQuotesPage />,
+    path: "/admin/products",
+    element: <AdminProductReviewPage />,
+  },
+  {
+    path: "/admin/orders",
+    element: <AdminOrdersPage />,
   },
   {
     path: "/admin/agents",

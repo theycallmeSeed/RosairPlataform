@@ -5,6 +5,8 @@ export type Product = {
   origin: string;
   destination: string;
   price: number;
+  /** Previous approved Marketplace Price (pricing-engine.md §7) — shown struck through to power the discount badge. Never the raw supplier cost. */
+  originalPrice?: number;
   currency: "USD";
   unit: string;
   moq: number;
@@ -28,6 +30,7 @@ export const products: Product[] = [
     origin: "Shenzhen, China",
     destination: "Maputo, Mozambique",
     price: 184,
+    originalPrice: 239,
     currency: "USD",
     unit: "unidade",
     moq: 50,
@@ -70,6 +73,7 @@ export const products: Product[] = [
     origin: "Foshan, China",
     destination: "Matola, Mozambique",
     price: 68,
+    originalPrice: 89,
     currency: "USD",
     unit: "conjunto",
     moq: 120,
@@ -133,6 +137,7 @@ export const products: Product[] = [
     origin: "Zhongshan, China",
     destination: "Harare, Zimbabwe",
     price: 27.5,
+    originalPrice: 36,
     currency: "USD",
     unit: "unidade",
     moq: 300,
@@ -175,6 +180,7 @@ export const products: Product[] = [
     origin: "Suzhou, China",
     destination: "Maputo, Mozambique",
     price: 248,
+    originalPrice: 312,
     currency: "USD",
     unit: "unidade",
     moq: 40,
@@ -217,6 +223,7 @@ export const products: Product[] = [
     origin: "Changzhou, China",
     destination: "Maputo, Mozambique",
     price: 175,
+    originalPrice: 219,
     currency: "USD",
     unit: "painel",
     moq: 100,
@@ -280,6 +287,7 @@ export const products: Product[] = [
     origin: "Hangzhou, China",
     destination: "Maputo, Mozambique",
     price: 89,
+    originalPrice: 115,
     currency: "USD",
     unit: "unidade",
     moq: 80,
@@ -322,6 +330,7 @@ export const products: Product[] = [
     origin: "Nantong, China",
     destination: "Nampula, Mozambique",
     price: 215,
+    originalPrice: 268,
     currency: "USD",
     unit: "unidade",
     moq: 50,
@@ -364,6 +373,7 @@ export const products: Product[] = [
     origin: "Shenzhen, China",
     destination: "Maputo, Mozambique",
     price: 68,
+    originalPrice: 85,
     currency: "USD",
     unit: "unidade",
     moq: 200,
@@ -427,6 +437,7 @@ export const products: Product[] = [
     origin: "Shenzhen, China",
     destination: "Maputo, Mozambique",
     price: 210,
+    originalPrice: 265,
     currency: "USD",
     unit: "unidade",
     moq: 40,
@@ -511,6 +522,7 @@ export const products: Product[] = [
     origin: "Qingdao, China",
     destination: "Maputo, Mozambique",
     price: 22,
+    originalPrice: 29,
     currency: "USD",
     unit: "peça",
     moq: 400,
@@ -574,6 +586,7 @@ export const products: Product[] = [
     origin: "Hangzhou, China",
     destination: "Maputo, Mozambique",
     price: 145,
+    originalPrice: 189,
     currency: "USD",
     unit: "conjunto",
     moq: 60,
@@ -637,6 +650,7 @@ export const products: Product[] = [
     origin: "Ningbo, China",
     destination: "Nampula, Mozambique",
     price: 32,
+    originalPrice: 41,
     currency: "USD",
     unit: "unidade",
     moq: 500,

@@ -1,43 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Boxes, ClipboardList, Clock3, PackagePlus, Ship, ShoppingCart, Store, TrendingUp } from "lucide-react";
+import { Boxes, Clock3, PackagePlus, Ship, ShoppingBag, TrendingUp } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import type { AgentProduct } from "./AgentNewProductPage";
+import { agentProductStatusLabel, loadAgentProducts, type AgentProduct } from "@/lib/agentProducts";
+import { advanceOrderStatus, getOrders, ORDER_STAGES, orderStatusLabel, type Order } from "@/lib/orders";
 
-const STORAGE_KEY = "roseair_agent_products";
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 
-const defaultProducts: [string, string, string, string][] = [
-  ["Commercial Solar Inverter Kits", "Energia", "Pronto para envio", "USD 184"],
-  ["Retail Packaging Cartons", "Embalagens", "Ativo", "USD 0.42"],
-  ["Industrial Shelving Units", "Armazenagem", "Em produção", "USD 68"],
-];
+const statusTone: Record<AgentProduct["status"], string> = {
+  Draft: "bg-slate-100 text-slate-600 hover:bg-slate-100",
+  Submitted: "bg-amber-100 text-amber-700 hover:bg-amber-100",
+  Published: "bg-emerald-100 text-emerald-700 hover:bg-emerald-100",
+  Rejected: "bg-red-100 text-red-700 hover:bg-red-100",
+};
 
-function loadAgentProducts(): AgentProduct[] {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
-  } catch {
-    return [];
-  }
+/** Next fulfillment action an Agent can take on an order not yet Delivered/Cancelled (BR-ORD-01: strictly forward). */
+function nextAgentAction(order: Order): { status: Order["status"]; label: string } | null {
+  const index = ORDER_STAGES.findIndex((s) => s.status === order.status);
+  if (index === -1 || index === ORDER_STAGES.length - 1) return null;
+  const next = ORDER_STAGES[index + 1];
+  return { status: next.status, label: `Avançar para: ${next.label}` };
 }
 
 export default function AgentDashboardPage() {
   const navigate = useNavigate();
-  const [agentProducts] = useState(loadAgentProducts);
+  const [agentProducts, setAgentProducts] = useState<AgentProduct[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const refresh = () => {
+    setAgentProducts(loadAgentProducts());
+    setOrders(getOrders());
+  };
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  const publishedCount = agentProducts.filter((p) => p.status === "Published").length;
+  const pendingCount = agentProducts.filter((p) => p.status === "Submitted").length;
+  const shippingCount = orders.filter((o) => ["PreparingShipment", "Shipped", "TrackingActive", "ArrivedAtPort", "CustomsClearance"].includes(o.status)).length;
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-700 text-white shadow-sm">
-              <Store className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+              L
             </div>
             <div>
-              <p className="text-lg font-bold tracking-tight">Roseair</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-red-700">Marketplace</p>
+              <p className="text-lg font-bold tracking-tight">Linkano</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
@@ -51,7 +69,7 @@ export default function AgentDashboardPage() {
               <Link to="/buyer">Comprador</Link>
             </Button>
             <Button asChild className="bg-red-700 hover:bg-red-800">
-              <Link to="/marketplace">Marketplace</Link>
+              <Link to="/">Marketplace</Link>
             </Button>
           </div>
         </div>
@@ -61,11 +79,11 @@ export default function AgentDashboardPage() {
           <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Painel do Agente</Badge>
           <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <h1 className="text-4xl font-bold tracking-tight">Operações do Fornecedor</h1>
-              <p className="mt-2 text-slate-600">Gerir ofertas de produtos, consultas recebidas e coordenação logística Roseair.</p>
+              <h1 className="text-4xl font-bold tracking-tight">Operações do Agente</h1>
+              <p className="mt-2 text-slate-600">Gerir produtos submetidos à Roseair, encomendas recebidas e coordenação logística.</p>
             </div>
             <Button className="bg-red-700 hover:bg-red-800" onClick={() => navigate("/agent/new-product")}>
-              <PackagePlus className="mr-2 h-4 w-4" /> Publicar Produto
+              <PackagePlus className="mr-2 h-4 w-4" /> Submeter Produto
             </Button>
           </div>
         </div>
@@ -74,10 +92,10 @@ export default function AgentDashboardPage() {
       <section className="mx-auto max-w-7xl px-6 py-8">
         <div className="grid gap-5 md:grid-cols-4">
           {[
-            [Boxes, "Anúncios ativos", "24"],
-            [ClipboardList, "Consultas abertas", "18"],
-            [Ship, "Encomendas em frete", "7"],
-            [TrendingUp, "Conversão de cotações", "31%"],
+            [Boxes, "Produtos publicados", String(publishedCount)],
+            [Clock3, "Aguardam aprovação Roseair", String(pendingCount)],
+            [Ship, "Encomendas em envio", String(shippingCount)],
+            [TrendingUp, "Encomendas totais", String(orders.length)],
           ].map(([Icon, label, value]) => {
             const KpiIcon = Icon as typeof Boxes;
 
@@ -96,49 +114,63 @@ export default function AgentDashboardPage() {
         <Card className="mt-6 border-slate-200 bg-white">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ShoppingCart className="h-5 w-5 text-red-700" /> Consultas de Cotação Recebidas
+              <ShoppingBag className="h-5 w-5 text-red-700" /> Encomendas Recebidas
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {[
-              { buyer: "Comprador Maputo", product: "Commercial Solar Inverter Kits", qty: 200, date: "2026-06-10", status: "Nova" },
-              { buyer: "Comprador Beira", product: "Retail Packaging Cartons", qty: 50000, date: "2026-06-09", status: "Nova" },
-              { buyer: "Comprador Matola", product: "Industrial Shelving Units", qty: 480, date: "2026-06-08", status: "Em análise" },
-            ].map((req) => (
-              <div key={`${req.product}-${req.date}`} className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 p-4">
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold">{req.product}</p>
-                  <p className="mt-1 text-sm text-slate-500">{req.buyer} • Qtd: {req.qty.toLocaleString()}</p>
-                  <p className="flex items-center gap-1 text-xs text-slate-400"><Clock3 className="h-3 w-3" /> {req.date}</p>
+            {orders.length === 0 && <p className="text-sm text-slate-500">Ainda sem encomendas.</p>}
+            {orders.map((order) => {
+              const action = nextAgentAction(order);
+              return (
+                <div key={order.id} className="flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 p-4 md:flex-row md:items-center">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold">{order.orderNumber}</p>
+                      <Badge variant="outline" className="text-[10px]">{orderStatusLabel(order.status)}</Badge>
+                    </div>
+                    <p className="mt-1 text-sm text-slate-500">{order.lines.map((l) => l.productName).join(", ")}</p>
+                    <p className="flex items-center gap-1 text-xs text-slate-400"><Clock3 className="h-3 w-3" /> {new Date(order.createdAt).toLocaleDateString("pt-PT")} • {formatCurrency(order.totalAmount)}</p>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <Button asChild variant="outline" className="border-slate-300">
+                      <Link to={`/orders/${order.id}`}>Ver / Chat</Link>
+                    </Button>
+                    {action && order.status !== "PendingPayment" && (
+                      <Button
+                        className="bg-red-700 hover:bg-red-800"
+                        onClick={() => {
+                          advanceOrderStatus(order.id, action.status);
+                          refresh();
+                        }}
+                      >
+                        {action.label}
+                      </Button>
+                    )}
+                  </div>
                 </div>
-                <Badge className={req.status === "Nova" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>{req.status}</Badge>
-              </div>
-            ))}
+              );
+            })}
           </CardContent>
         </Card>
 
         <Card className="mt-6 border-slate-200 bg-white">
           <CardHeader>
-            <CardTitle>Anúncios de Produtos</CardTitle>
+            <CardTitle>Os Meus Produtos</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {defaultProducts.map(([name, category, status, price]) => (
-              <div key={name} className="grid gap-3 rounded-2xl border border-slate-200 p-4 md:grid-cols-[1fr_160px_160px_120px] md:items-center">
-                <p className="font-semibold">{name}</p>
-                <Badge variant="outline">{category}</Badge>
-                <Badge className="bg-red-50 text-red-700 hover:bg-red-50">{status}</Badge>
-                <p className="font-bold">{price}</p>
-              </div>
-            ))}
-            {agentProducts.filter((p) => p.status === "publicado").map((product) => (
-              <div key={product.id} className="grid gap-3 rounded-2xl border border-emerald-200 p-4 md:grid-cols-[1fr_160px_160px_120px] md:items-center">
+            {agentProducts.length === 0 && <p className="text-sm text-slate-500">Ainda não submeteu nenhum produto.</p>}
+            {agentProducts.map((product) => (
+              <div key={product.id} className="grid gap-3 rounded-2xl border border-slate-200 p-4 md:grid-cols-[1fr_160px_200px_120px] md:items-center">
                 <div>
                   <p className="font-semibold">{product.name}</p>
                   <p className="mt-0.5 text-xs text-slate-400">{product.id}</p>
+                  {product.status === "Rejected" && product.rejectionReason && (
+                    <p className="mt-1 text-xs text-red-600">Motivo: {product.rejectionReason}</p>
+                  )}
                 </div>
                 <Badge variant="outline">{product.category}</Badge>
-                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">{product.stockStatus}</Badge>
-                <p className="font-bold">USD {product.price}</p>
+                <Badge className={statusTone[product.status]}>{agentProductStatusLabel[product.status]}</Badge>
+                <p className="font-bold">Custo: USD {product.supplierCost}</p>
               </div>
             ))}
           </CardContent>
