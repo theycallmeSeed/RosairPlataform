@@ -1,6 +1,6 @@
 namespace Linkano.Domain.Common;
 
-public abstract class AggregateRoot : BaseEntity
+public abstract class AggregateRoot : AuditableEntity
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 
