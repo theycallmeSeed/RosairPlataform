@@ -82,17 +82,9 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
-        heroFade: {
-          "0%, 100%": { opacity: "0" },
-          "4%": { opacity: "0" },
-          "10%": { opacity: "1" },
-          "18%": { opacity: "1" },
-          "24%": { opacity: "0" },
-        },
       },
       animation: {
         marquee: "marquee 22s linear infinite",
-        "hero-fade": "heroFade 24s ease-in-out infinite",
       },
     },
   },
