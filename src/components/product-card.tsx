@@ -3,6 +3,7 @@ import { ShieldCheck, Truck, Zap } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { addToCart } from "@/lib/cart";
+import { optimizedImageUrl } from "@/lib/image";
 import type { Product } from "@/data/products";
 
 const formatCurrency = (value: number) =>
@@ -16,6 +17,8 @@ type ProductCardProps = {
   product: Product;
   /** Compact = fixed-width card for horizontal scroll rows (Flash Deals, Best Sellers, ...). */
   compact?: boolean;
+  /** Only for cards plausibly above the fold (e.g. the first row of the homepage's first rail) — skips lazy-loading and hints the browser to fetch this image first. */
+  priority?: boolean;
 };
 
 /**
@@ -24,7 +27,7 @@ type ProductCardProps = {
  * required by the marketplace redesign: discount ribbon, Linkano Approved,
  * Verified Agent, shipping-included tag, and a Buy Now action.
  */
-export function ProductCard({ product, compact = false }: ProductCardProps) {
+export function ProductCard({ product, compact = false, priority = false }: ProductCardProps) {
   const navigate = useNavigate();
   const hasDiscount = !!product.originalPrice && product.originalPrice > product.price;
   const discountPercent = hasDiscount
@@ -45,8 +48,13 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative aspect-square overflow-hidden bg-slate-100">
           <img
-            src={product.imageUrl}
+            src={optimizedImageUrl(product.imageUrl, 400, 300)}
             alt={product.name}
+            width={400}
+            height={300}
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+            fetchPriority={priority ? "high" : undefined}
             className="h-full w-full object-cover transition duration-300 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />

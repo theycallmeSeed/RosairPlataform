@@ -1,12 +1,14 @@
 import { type ReactNode, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  ArrowRight,
   Battery,
   Boxes,
   Clock3,
   Flame,
   Hammer,
   Leaf,
+  MapPin,
   Plane,
   Plug,
   Search,
@@ -27,8 +29,12 @@ import { ProductCard } from "@/components/product-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { optimizedImageUrl } from "@/lib/image";
 
 import { products, type Product } from "@/data/products";
+
+/** A handful of visually distinct products used as a slow crossfade backdrop behind the hero gradient. */
+const HERO_CAROUSEL_IDS = ["PRD-001", "PRD-006", "PRD-010", "PRD-017", "PRD-023", "PRD-027"];
 
 const categoryIcons: Record<string, typeof Boxes> = {
   Energia: Zap,
@@ -59,11 +65,11 @@ const categoryTheme = [
  * Best Sellers and China Direct Imports — the "multiple horizontal product
  * sections" requirement.
  */
-function ProductRail({ items }: { items: Product[] }) {
+function ProductRail({ items, priorityCount = 0 }: { items: Product[]; priorityCount?: number }) {
   return (
     <div className="flex snap-x gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      {items.map((product) => (
-        <ProductCard key={product.id} product={product} compact />
+      {items.map((product, i) => (
+        <ProductCard key={product.id} product={product} compact priority={i < priorityCount} />
       ))}
     </div>
   );
@@ -111,6 +117,10 @@ export default function MarketplacePage() {
   const chinaDirect = useMemo(() => [...products].sort((a, b) => a.leadTimeDays - b.leadTimeDays).slice(0, 10), []);
   const recentlyAdded = useMemo(() => [...products].slice(-8).reverse(), []);
   const popularCategories = useMemo(() => categories.slice(0, 6), [categories]);
+  const heroCarouselProducts = useMemo(
+    () => HERO_CAROUSEL_IDS.map((id) => products.find((p) => p.id === id)).filter((p): p is Product => !!p),
+    [],
+  );
 
   const handleHeroSearch = () => {
     navigate(heroSearch.trim() ? `/marketplace?search=${encodeURIComponent(heroSearch.trim())}` : "/marketplace");
@@ -121,11 +131,30 @@ export default function MarketplacePage() {
       <SiteHeader />
 
       {/* 1. Hero Search */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-gold-500 py-14 text-white sm:py-20">
-        <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-gold-300/20 blur-3xl" />
-        <div className="relative mx-auto max-w-5xl px-6 text-center">
-          <Badge className="bg-white/20 text-white hover:bg-white/20">🇲🇿 O maior marketplace de importação de Moçambique</Badge>
+      <section className="relative overflow-hidden py-14 text-white sm:py-20">
+        <div aria-hidden="true" className="absolute inset-0 z-0">
+          {heroCarouselProducts.map((product, i) => (
+            <img
+              key={product.id}
+              src={optimizedImageUrl(product.imageUrl, 900, 600, 45)}
+              alt=""
+              width={900}
+              height={600}
+              loading="eager"
+              decoding="async"
+              fetchPriority={i === 0 ? "high" : undefined}
+              className="absolute inset-0 h-full w-full animate-hero-fade object-cover opacity-0"
+              style={{ animationDelay: `${i * 4}s` }}
+            />
+          ))}
+        </div>
+        <div className="absolute inset-0 z-10 bg-gradient-to-br from-brand-700/95 via-brand-600/90 to-gold-500/85" />
+        <div className="pointer-events-none absolute -left-24 -top-24 z-20 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -right-16 z-20 h-80 w-80 rounded-full bg-gold-300/20 blur-3xl" />
+        <div className="relative z-20 mx-auto max-w-5xl px-6 text-center">
+          <Badge className="gap-1.5 bg-white/20 text-white hover:bg-white/20">
+            <MapPin className="h-3.5 w-3.5" /> O maior marketplace de importação de Moçambique
+          </Badge>
           <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
             Compre o mundo.<br /> Entregue em Moçambique.
           </h1>
@@ -183,23 +212,28 @@ export default function MarketplacePage() {
             to="/marketplace?category=Energia"
             className="group relative col-span-2 flex min-h-[220px] flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-600 to-gold-600 p-8 text-white shadow-xl"
           >
-            <Sparkles className="pointer-events-none absolute right-8 top-8 h-24 w-24 text-white/15 transition group-hover:scale-110" />
             <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Campanha da Semana</Badge>
             <h3 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Energia Solar até -30%</h3>
             <p className="mt-2 max-w-md text-white/90">Painéis, inversores e baterias prontos para envio, com preço final e supervisão Linkano.</p>
-            <span className="mt-4 inline-flex w-fit items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-bold text-brand-700">Ver Ofertas →</span>
+            <span className="mt-4 inline-flex w-fit items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-bold text-brand-700">
+              Ver Ofertas <ArrowRight className="h-3.5 w-3.5" />
+            </span>
           </Link>
 
           <div className="grid grid-rows-2 gap-4">
             <Link to="/marketplace?category=Electrónica" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-gold-500 to-gold-700 p-6 text-white shadow-lg">
               <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Novidade</Badge>
               <h4 className="mt-2 text-xl font-extrabold">Electrónica Directa da China</h4>
-              <span className="mt-2 text-xs font-bold text-white/90">Explorar →</span>
+              <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-white/90">
+                Explorar <ArrowRight className="h-3 w-3" />
+              </span>
             </Link>
             <Link to="/marketplace?category=Construção" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white shadow-lg">
               <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Grandes Volumes</Badge>
               <h4 className="mt-2 text-xl font-extrabold">Materiais de Construção</h4>
-              <span className="mt-2 text-xs font-bold text-white/90">Explorar →</span>
+              <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-white/90">
+                Explorar <ArrowRight className="h-3 w-3" />
+              </span>
             </Link>
           </div>
         </div>
@@ -218,7 +252,7 @@ export default function MarketplacePage() {
               </span>
             }
           />
-          <ProductRail items={flashDeals} />
+          <ProductRail items={flashDeals} priorityCount={4} />
         </div>
       </section>
 
@@ -251,7 +285,15 @@ export default function MarketplacePage() {
                 className={`group relative flex h-40 items-end overflow-hidden rounded-3xl bg-gradient-to-br ${categoryTheme[i % categoryTheme.length]} p-5 text-white shadow-lg transition hover:-translate-y-1 hover:shadow-2xl`}
               >
                 {sample && (
-                  <img src={sample.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover opacity-30 transition group-hover:opacity-40" />
+                  <img
+                    src={optimizedImageUrl(sample.imageUrl, 500, 320, 45)}
+                    alt=""
+                    width={500}
+                    height={320}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover opacity-30 transition group-hover:opacity-40"
+                  />
                 )}
                 <div className="relative">
                   <p className="text-xl font-black">{cat}</p>

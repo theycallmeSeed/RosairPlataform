@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, PackageCheck, ShoppingCart, Trash2 } from "lucide-react";
+import { ArrowLeft, Minus, PackageCheck, Plus, ShoppingCart, Trash2 } from "lucide-react";
 
 import { SiteHeader } from "@/components/site-header";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import { getCartWithProducts, removeFromCart, updateCartQuantity, type CartLineWithProduct } from "@/lib/cart";
+import { optimizedImageUrl } from "@/lib/image";
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("en-US", {
@@ -72,26 +73,38 @@ export default function CartPage() {
                   <CardContent className="space-y-4">
                     {lines.filter((l) => l.product.agent === agent).map((line) => (
                       <div key={line.productId} className="flex items-center gap-4 rounded-2xl border border-slate-200 p-4">
-                        <img src={line.product.imageUrl} alt={line.product.name} className="h-16 w-16 shrink-0 rounded-xl object-cover" />
+                        <img
+                          src={optimizedImageUrl(line.product.imageUrl, 128, 128)}
+                          alt={line.product.name}
+                          width={64}
+                          height={64}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-16 w-16 shrink-0 rounded-xl object-cover"
+                        />
                         <div className="min-w-0 flex-1">
                           <Link to={`/product/${line.productId}`} className="line-clamp-1 font-semibold hover:text-brand-700">{line.product.name}</Link>
                           <p className="mt-1 text-sm text-slate-500">{formatCurrency(line.product.price)} / {line.product.unit}</p>
                           <div className="mt-2 flex items-center gap-2">
                             <button
-                              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-sm font-semibold hover:border-brand-300 hover:text-brand-700"
+                              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 hover:border-brand-300 hover:text-brand-700"
                               onClick={() => {
                                 updateCartQuantity(line.productId, Math.max(line.product.moq, line.quantity - line.product.moq));
                                 refresh();
                               }}
-                            >−</button>
+                            >
+                              <Minus className="h-3.5 w-3.5" />
+                            </button>
                             <span className="min-w-[3rem] text-center text-sm font-bold tabular-nums">{line.quantity.toLocaleString()}</span>
                             <button
-                              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 text-sm font-semibold hover:border-brand-300 hover:text-brand-700"
+                              className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-300 hover:border-brand-300 hover:text-brand-700"
                               onClick={() => {
                                 updateCartQuantity(line.productId, line.quantity + line.product.moq);
                                 refresh();
                               }}
-                            >+</button>
+                            >
+                              <Plus className="h-3.5 w-3.5" />
+                            </button>
                           </div>
                         </div>
                         <div className="text-right">

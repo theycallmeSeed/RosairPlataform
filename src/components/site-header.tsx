@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShieldCheck, ShoppingCart, Sparkles, Store, User } from "lucide-react";
+import { CreditCard, Globe2, Search, ShieldCheck, ShoppingCart, Sparkles, Store, Truck, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,10 +13,10 @@ type SiteHeaderProps = {
 };
 
 const TICKER_ITEMS = [
-  "🚀 Envio incluído em todos os produtos",
-  "💳 Pague com M-Pesa, e-Mola ou Transferência Bancária",
-  "🛡️ Todos os produtos aprovados pela Linkano antes de publicados",
-  "🌍 Importação directa da China para Moçambique e SADC",
+  { icon: Truck, text: "Envio incluído em todos os produtos" },
+  { icon: CreditCard, text: "Pague com M-Pesa, e-Mola ou Transferência Bancária" },
+  { icon: ShieldCheck, text: "Todos os produtos aprovados pela Linkano antes de publicados" },
+  { icon: Globe2, text: "Importação directa da China para Moçambique e SADC" },
 ];
 
 /**
@@ -56,9 +56,9 @@ export function SiteHeader({ extraActions }: SiteHeaderProps) {
     <div className="sticky top-0 z-50">
       <div className="overflow-hidden bg-brand-600 py-1.5 text-white">
         <div className="flex animate-marquee whitespace-nowrap text-xs font-semibold">
-          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map(({ icon: Icon, text }, i) => (
             <span key={i} className="mx-6 inline-flex items-center gap-1.5">
-              {item}
+              <Icon className="h-3.5 w-3.5 shrink-0" /> {text}
             </span>
           ))}
         </div>

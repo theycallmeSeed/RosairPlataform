@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Boxes, CheckCircle2, ClipboardCheck, MapPin, PackageCheck, ShieldCheck, Ship, Warehouse } from "lucide-react";
+import { ArrowLeft, Boxes, CheckCircle2, ClipboardCheck, MapPin, Minus, PackageCheck, Plus, ShieldCheck, Ship, Warehouse } from "lucide-react";
 
 import { ProductCard } from "@/components/product-card";
 import { SiteHeader } from "@/components/site-header";
@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { products } from "@/data/products";
 import { addToCart } from "@/lib/cart";
+import { optimizedImageUrl } from "@/lib/image";
 
 const SAVED_KEY = "linkano_saved_products";
 
@@ -81,7 +82,16 @@ export default function ProductDetailsPage() {
           <div className="grid gap-8 lg:grid-cols-[1fr_380px] lg:items-start">
             <div>
               <div className="relative mb-6 h-56 overflow-hidden rounded-2xl bg-slate-100">
-                <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
+                <img
+                  src={optimizedImageUrl(product.imageUrl, 700, 448)}
+                  alt={product.name}
+                  width={700}
+                  height={448}
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  className="h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 <div className="absolute left-4 top-4">
                   <Badge className="bg-white text-brand-600 shadow-sm hover:bg-white">{product.category}</Badge>
@@ -142,14 +152,18 @@ export default function ProductDetailsPage() {
                   </div>
                   <div className="mt-2 flex items-center gap-3">
                     <button
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
                       onClick={() => setQty(Math.max(product.moq, qty - product.moq))}
-                    >−</button>
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
                     <span className="min-w-[4rem] text-center text-2xl font-bold tabular-nums">{qty.toLocaleString()}</span>
                     <button
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
                       onClick={() => setQty(qty + product.moq)}
-                    >+</button>
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
 
@@ -201,8 +215,8 @@ export default function ProductDetailsPage() {
                 >
                   Adicionar ao Carrinho
                 </Button>
-                <Button variant="ghost" className="w-full text-slate-500 hover:bg-slate-100" onClick={() => setSaved(toggleSaved(product.id))}>
-                  {saved ? "Produto Guardado ✓" : "Guardar Produto"}
+                <Button variant="ghost" className="w-full gap-1.5 text-slate-500 hover:bg-slate-100" onClick={() => setSaved(toggleSaved(product.id))}>
+                  {saved && <CheckCircle2 className="h-4 w-4 text-emerald-600" />} {saved ? "Produto Guardado" : "Guardar Produto"}
                 </Button>
               </CardContent>
             </Card>
