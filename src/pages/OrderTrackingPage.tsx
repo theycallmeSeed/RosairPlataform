@@ -37,9 +37,9 @@ export default function OrderTrackingPage() {
       <main className="min-h-screen bg-slate-50 text-slate-950">
         <SiteHeader />
         <section className="mx-auto max-w-3xl px-6 py-20 text-center">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Encomenda não encontrada</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Encomenda não encontrada</Badge>
           <h1 className="mt-6 text-3xl font-bold tracking-tight">Esta encomenda não existe</h1>
-          <Button asChild className="mt-8 bg-red-700 hover:bg-red-800">
+          <Button asChild className="mt-8 bg-brand-700 hover:bg-brand-800">
             <Link to="/buyer">Voltar às Minhas Encomendas</Link>
           </Button>
         </section>
@@ -63,12 +63,12 @@ export default function OrderTrackingPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Button asChild variant="ghost" className="mb-4 text-red-700 hover:bg-red-50 hover:text-red-800">
+          <Button asChild variant="ghost" className="mb-4 text-brand-700 hover:bg-brand-50 hover:text-brand-800">
             <Link to="/buyer"><ArrowLeft className="mr-2 h-4 w-4" /> Minhas Encomendas</Link>
           </Button>
           <div className="flex flex-wrap items-center gap-3">
-            <Badge className="bg-red-100 text-red-800 hover:bg-red-100">{order.orderNumber}</Badge>
-            {order.isDisputed && <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">Em Disputa</Badge>}
+            <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">{order.orderNumber}</Badge>
+            {order.isDisputed && <Badge className="bg-gold-100 text-gold-800 hover:bg-gold-100">Em Disputa</Badge>}
           </div>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">
             {order.status === "Cancelled" ? "Encomenda Cancelada" : "Acompanhamento da Encomenda"}
@@ -81,7 +81,7 @@ export default function OrderTrackingPage() {
         <div className="space-y-6">
           <Card className="border-slate-200 bg-white">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><PackageCheck className="h-5 w-5 text-red-700" /> Estado do Envio</CardTitle>
+              <CardTitle className="flex items-center gap-2"><PackageCheck className="h-5 w-5 text-brand-700" /> Estado do Envio</CardTitle>
             </CardHeader>
             <CardContent>
               {order.status === "Cancelled" ? (
@@ -112,7 +112,7 @@ export default function OrderTrackingPage() {
             <CardContent className="space-y-3">
               {[...order.trackingEvents].reverse().map((event, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-xl border border-slate-100 p-3 text-sm">
-                  <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-red-700" />
+                  <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-700" />
                   <div>
                     <p className="font-medium">{event.label}</p>
                     <p className="text-xs text-slate-400">{formatDate(event.occurredAt)}</p>
@@ -127,23 +127,23 @@ export default function OrderTrackingPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MessageCircle className="h-5 w-5 text-red-700" /> Chat com o Agente
-                <Badge variant="outline" className="ml-auto flex items-center gap-1 text-[10px]"><ShieldCheck className="h-3 w-3" /> Supervisionado pela Roseair</Badge>
+                <MessageCircle className="h-5 w-5 text-brand-700" /> Chat com o Agente
+                <Badge variant="outline" className="ml-auto flex items-center gap-1 text-[10px]"><ShieldCheck className="h-3 w-3" /> Supervisionado pela Linkano</Badge>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="max-h-64 space-y-2 overflow-y-auto">
                 {messages.length === 0 && <p className="text-sm text-slate-500">Ainda não há mensagens. Coordene aqui a preparação do seu envio.</p>}
                 {messages.map((m) => (
-                  <div key={m.id} className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${m.sender === "buyer" ? "ml-auto bg-red-700 text-white" : "bg-slate-100 text-slate-800"}`}>
+                  <div key={m.id} className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${m.sender === "buyer" ? "ml-auto bg-brand-700 text-white" : "bg-slate-100 text-slate-800"}`}>
                     <p>{m.body}</p>
-                    <p className={`mt-1 text-[10px] ${m.sender === "buyer" ? "text-red-100" : "text-slate-400"}`}>{formatDate(m.sentAt)}</p>
+                    <p className={`mt-1 text-[10px] ${m.sender === "buyer" ? "text-brand-100" : "text-slate-400"}`}>{formatDate(m.sentAt)}</p>
                   </div>
                 ))}
               </div>
               <div className="flex items-center gap-2">
                 <Input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSend()} placeholder="Escreva uma mensagem sobre especificações, envio ou documentação..." />
-                <Button className="bg-red-700 hover:bg-red-800" onClick={handleSend}><Send className="h-4 w-4" /></Button>
+                <Button className="bg-brand-700 hover:bg-brand-800" onClick={handleSend}><Send className="h-4 w-4" /></Button>
               </div>
             </CardContent>
           </Card>
@@ -165,7 +165,7 @@ export default function OrderTrackingPage() {
             ))}
             <div className="flex items-center justify-between border-t border-slate-100 pt-3">
               <span className="text-sm font-semibold">Total</span>
-              <span className="text-lg font-bold text-red-700">{formatCurrency(order.totalAmount)}</span>
+              <span className="text-lg font-bold text-brand-700">{formatCurrency(order.totalAmount)}</span>
             </div>
           </CardContent>
         </Card>

@@ -12,9 +12,9 @@ import { agentProductStatusLabel, approveAgentProduct, loadAgentProducts, reject
 
 const statusTone: Record<AgentProduct["status"], string> = {
   Draft: "bg-slate-100 text-slate-600 hover:bg-slate-100",
-  Submitted: "bg-amber-100 text-amber-700 hover:bg-amber-100",
+  Submitted: "bg-gold-100 text-gold-700 hover:bg-gold-100",
   Published: "bg-emerald-100 text-emerald-700 hover:bg-emerald-100",
-  Rejected: "bg-red-100 text-red-700 hover:bg-red-100",
+  Rejected: "bg-brand-100 text-brand-700 hover:bg-brand-100",
 };
 
 /**
@@ -56,19 +56,19 @@ export default function AdminProductReviewPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-base font-black text-white shadow-sm">
               L
             </div>
             <div>
               <p className="text-lg font-bold tracking-tight">Linkano</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-brand-600">Powered by Linkano</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
             <Button asChild variant="outline" className="border-slate-300">
               <Link to="/admin">Painel de Admin</Link>
             </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
+            <Button asChild className="bg-brand-700 hover:bg-brand-800">
               <Link to="/">Marketplace</Link>
             </Button>
           </div>
@@ -77,7 +77,7 @@ export default function AdminProductReviewPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Aprovação de Produtos</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Aprovação de Produtos</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Revisão de Produtos e Preços</h1>
           <p className="mt-2 text-slate-600">Reveja os produtos submetidos pelos agentes antes de calcularem o preço final e ficarem visíveis no marketplace.</p>
 
@@ -128,7 +128,7 @@ export default function AdminProductReviewPage() {
                       </div>
                       <div>
                         <p className="text-xs text-slate-500">Custo de Fornecedor</p>
-                        <p className="font-bold text-red-700">USD {product.supplierCost}</p>
+                        <p className="font-bold text-brand-700">USD {product.supplierCost}</p>
                       </div>
                       <div>
                         <p className="text-xs text-slate-500">MOQ</p>
@@ -137,11 +137,11 @@ export default function AdminProductReviewPage() {
                     </div>
 
                     {rejecting === product.id && (
-                      <div className="mt-4 space-y-2 rounded-xl border border-red-200 bg-red-50 p-3">
-                        <label className="text-xs font-medium text-red-800">Motivo da rejeição (obrigatório)</label>
+                      <div className="mt-4 space-y-2 rounded-xl border border-brand-200 bg-brand-50 p-3">
+                        <label className="text-xs font-medium text-brand-800">Motivo da rejeição (obrigatório)</label>
                         <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ex: documentação incompleta, especificações insuficientes..." />
                         <div className="flex gap-2">
-                          <Button size="sm" className="bg-red-700 hover:bg-red-800" onClick={() => handleConfirmReject(product.id)} disabled={!reason.trim()}>Confirmar Rejeição</Button>
+                          <Button size="sm" className="bg-brand-700 hover:bg-brand-800" onClick={() => handleConfirmReject(product.id)} disabled={!reason.trim()}>Confirmar Rejeição</Button>
                           <Button size="sm" variant="outline" onClick={() => { setRejecting(null); setReason(""); }}>Cancelar</Button>
                         </div>
                       </div>
@@ -153,7 +153,7 @@ export default function AdminProductReviewPage() {
                       <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => handleApprove(product.id)}>
                         <CheckCircle2 className="mr-1 h-4 w-4" /> Aprovar e Publicar
                       </Button>
-                      <Button variant="outline" className="border-red-300 text-red-700 hover:bg-red-50" onClick={() => setRejecting(product.id)}>
+                      <Button variant="outline" className="border-brand-300 text-brand-700 hover:bg-brand-50" onClick={() => setRejecting(product.id)}>
                         <XCircle className="mr-1 h-4 w-4" /> Rejeitar
                       </Button>
                     </div>
@@ -166,7 +166,7 @@ export default function AdminProductReviewPage() {
 
         {filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-slate-300 p-12 text-center">
-            <PackageCheck className="mx-auto h-12 w-12 text-red-700" />
+            <PackageCheck className="mx-auto h-12 w-12 text-brand-700" />
             <h3 className="mt-4 text-xl font-semibold">Nenhum produto encontrado</h3>
             <p className="mt-2 text-sm text-slate-500">Ajuste os filtros ou aguarde novas submissões dos agentes.</p>
           </div>

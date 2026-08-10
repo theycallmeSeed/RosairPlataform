@@ -6,7 +6,7 @@ export type ChatMessage = {
   sentAt: string;
 };
 
-const CHAT_KEY = "roseair_chat_messages";
+const CHAT_KEY = "linkano_chat_messages";
 
 function readAll(): ChatMessage[] {
   try {
@@ -20,7 +20,7 @@ function writeAll(messages: ChatMessage[]) {
   localStorage.setItem(CHAT_KEY, JSON.stringify(messages));
 }
 
-/** Order-scoped thread, created implicitly on PaymentConfirmed (BR-CHT-01) — Roseair has full read visibility (BR-CHT-02), enforced at the query layer once a real backend exists. */
+/** Order-scoped thread, created implicitly on PaymentConfirmed (BR-CHT-01) — Linkano has full read visibility (BR-CHT-02), enforced at the query layer once a real backend exists. */
 export function getMessagesForOrder(orderId: string): ChatMessage[] {
   return readAll()
     .filter((m) => m.orderId === orderId)

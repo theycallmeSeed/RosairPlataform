@@ -56,19 +56,19 @@ export default function AgentApprovalPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-base font-black text-white shadow-sm">
               L
             </div>
             <div>
               <p className="text-lg font-bold tracking-tight">Linkano</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-brand-600">Powered by Linkano</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
             <Button asChild variant="outline" className="border-slate-300">
               <Link to="/admin">Painel de Admin</Link>
             </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
+            <Button asChild className="bg-brand-700 hover:bg-brand-800">
               <Link to="/marketplace">Marketplace</Link>
             </Button>
           </div>
@@ -77,12 +77,12 @@ export default function AgentApprovalPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Aprovação de Agentes</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Aprovação de Agentes</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Fila de Aprovação de Agentes</h1>
-          <p className="mt-2 text-slate-600">Revise e aprove agentes que solicitaram registo no marketplace Linkano, supervisionado pela Roseair.</p>
+          <p className="mt-2 text-slate-600">Revise e aprove agentes que solicitaram registo no marketplace Linkano.</p>
 
           {pendingCount > 0 && (
-            <div className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800">
+            <div className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-gold-50 px-4 py-2 text-sm font-medium text-gold-800">
               <Clock3 className="h-4 w-4" /> {pendingCount} agente{pendingCount !== 1 ? "s" : ""} pendente{pendingCount !== 1 ? "s" : ""} de aprovação
             </div>
           )}
@@ -117,7 +117,7 @@ export default function AgentApprovalPage() {
                   <div className="flex-1">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-700">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
                           <Building2 className="h-6 w-6" />
                         </div>
                         <div>
@@ -125,13 +125,13 @@ export default function AgentApprovalPage() {
                             <h3 className="text-lg font-semibold">{agent.name}</h3>
                             <Badge className={
                               agent.status === "approved" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                              : agent.status === "rejected" ? "bg-red-100 text-red-700 hover:bg-red-100"
-                              : "bg-amber-100 text-amber-700 hover:bg-amber-100"
+                              : agent.status === "rejected" ? "bg-brand-100 text-brand-700 hover:bg-brand-100"
+                              : "bg-gold-100 text-gold-700 hover:bg-gold-100"
                             }>
                               {statusLabels[agent.status]}
                             </Badge>
                           </div>
-                          <p className="mt-1 flex items-center gap-2 text-sm text-slate-500"><MapPin className="h-4 w-4 text-red-700" /> {agent.city}, China</p>
+                          <p className="mt-1 flex items-center gap-2 text-sm text-slate-500"><MapPin className="h-4 w-4 text-brand-700" /> {agent.city}, China</p>
                         </div>
                       </div>
                       <Badge variant="outline">{agent.rating}</Badge>
@@ -166,7 +166,7 @@ export default function AgentApprovalPage() {
                       <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => updateStatus(agent.id, "approved")}>
                         <CheckCircle2 className="mr-1 h-4 w-4" /> Aprovar
                       </Button>
-                      <Button variant="outline" className="border-red-300 text-red-700 hover:bg-red-50" onClick={() => updateStatus(agent.id, "rejected")}>
+                      <Button variant="outline" className="border-brand-300 text-brand-700 hover:bg-brand-50" onClick={() => updateStatus(agent.id, "rejected")}>
                         <XCircle className="mr-1 h-4 w-4" /> Rejeitar
                       </Button>
                     </div>
@@ -179,7 +179,7 @@ export default function AgentApprovalPage() {
                   )}
 
                   {agent.status === "rejected" && (
-                    <div className="flex items-center gap-2 text-sm font-medium text-red-600">
+                    <div className="flex items-center gap-2 text-sm font-medium text-brand-600">
                       <XCircle className="h-4 w-4" /> Registo rejeitado
                     </div>
                   )}
@@ -191,7 +191,7 @@ export default function AgentApprovalPage() {
 
         {filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-slate-300 p-12 text-center">
-            <Building2 className="mx-auto h-12 w-12 text-red-700" />
+            <Building2 className="mx-auto h-12 w-12 text-brand-700" />
             <h3 className="mt-4 text-xl font-semibold">Nenhum agente encontrado</h3>
             <p className="mt-2 text-sm text-slate-500">Ajuste os filtros ou aguarde novos registos de agentes.</p>
           </div>

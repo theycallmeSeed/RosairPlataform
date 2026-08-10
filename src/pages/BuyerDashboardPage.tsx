@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { products } from "@/data/products";
 import { getOrders, orderStatusLabel, type Order, type OrderStatus } from "@/lib/orders";
 
-const SAVED_KEY = "roseair_saved_products";
+const SAVED_KEY = "linkano_saved_products";
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("en-US", {
@@ -30,9 +30,9 @@ function loadSaved(): string[] {
 
 const statusTone = (status: OrderStatus) => {
   if (status === "Delivered") return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100";
-  if (status === "Cancelled") return "bg-red-100 text-red-700 hover:bg-red-100";
-  if (status === "PendingPayment") return "bg-amber-100 text-amber-700 hover:bg-amber-100";
-  return "bg-red-50 text-red-700 hover:bg-red-50";
+  if (status === "Cancelled") return "bg-brand-100 text-brand-700 hover:bg-brand-100";
+  if (status === "PendingPayment") return "bg-gold-100 text-gold-700 hover:bg-gold-100";
+  return "bg-brand-50 text-brand-700 hover:bg-brand-50";
 };
 
 export default function BuyerDashboardPage() {
@@ -58,7 +58,7 @@ export default function BuyerDashboardPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Painel do Comprador</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Painel do Comprador</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">As Minhas Importações</h1>
           <p className="mt-2 text-slate-600">Produtos guardados, encomendas em curso e histórico de compras.</p>
         </div>
@@ -69,7 +69,7 @@ export default function BuyerDashboardPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ShoppingBag className="h-5 w-5 text-red-700" /> As Minhas Encomendas
+                <ShoppingBag className="h-5 w-5 text-brand-700" /> As Minhas Encomendas
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -77,7 +77,7 @@ export default function BuyerDashboardPage() {
                 <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center">
                   <PackageCheck className="mx-auto h-8 w-8 text-slate-300" />
                   <p className="mt-3 font-medium text-slate-500">Ainda não fez nenhuma compra</p>
-                  <Button asChild className="mt-4 bg-red-700 hover:bg-red-800">
+                  <Button asChild className="mt-4 bg-brand-700 hover:bg-brand-800">
                     <Link to="/">Explorar Marketplace</Link>
                   </Button>
                 </div>
@@ -86,7 +86,7 @@ export default function BuyerDashboardPage() {
                 <Link
                   key={order.id}
                   to={`/orders/${order.id}`}
-                  className="block rounded-2xl border border-slate-200 p-4 transition hover:border-red-200 hover:shadow-sm"
+                  className="block rounded-2xl border border-slate-200 p-4 transition hover:border-brand-200 hover:shadow-sm"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -103,7 +103,7 @@ export default function BuyerDashboardPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Heart className="h-5 w-5 text-red-700" /> Produtos Guardados
+                <Heart className="h-5 w-5 text-brand-700" /> Produtos Guardados
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -111,7 +111,7 @@ export default function BuyerDashboardPage() {
                 <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center">
                   <Heart className="mx-auto h-8 w-8 text-slate-300" />
                   <p className="mt-3 font-medium text-slate-500">Nenhum produto guardado</p>
-                  <Button asChild className="mt-4 bg-red-700 hover:bg-red-800">
+                  <Button asChild className="mt-4 bg-brand-700 hover:bg-brand-800">
                     <Link to="/">Explorar Produtos</Link>
                   </Button>
                 </div>
@@ -119,7 +119,7 @@ export default function BuyerDashboardPage() {
               {savedProducts.map((p) => (
                 <div key={p.id} className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 p-4">
                   <div className="min-w-0 flex-1">
-                    <Link to={`/product/${p.id}`} className="font-semibold transition hover:text-red-700">{p.name}</Link>
+                    <Link to={`/product/${p.id}`} className="font-semibold transition hover:text-brand-700">{p.name}</Link>
                     <p className="mt-1 text-sm text-slate-500">{p.agent} • {p.category}</p>
                   </div>
                   <Button variant="outline" className="shrink-0 border-slate-300" onClick={() => removeSaved(p.id)}>Remover</Button>
@@ -131,10 +131,10 @@ export default function BuyerDashboardPage() {
 
         <Separator className="my-8" />
 
-        <div className="rounded-2xl bg-red-50 p-6 text-center">
-          <h3 className="text-xl font-semibold text-red-900">Pronto para encontrar mais fornecedores?</h3>
-          <p className="mt-2 text-red-900/70">Descubra milhares de produtos prontos para importar da China para Moçambique e SADC.</p>
-          <Button asChild className="mt-6 bg-red-700 hover:bg-red-800">
+        <div className="rounded-2xl bg-brand-50 p-6 text-center">
+          <h3 className="text-xl font-semibold text-brand-900">Pronto para encontrar mais fornecedores?</h3>
+          <p className="mt-2 text-brand-900/70">Descubra milhares de produtos prontos para importar da China para Moçambique e SADC.</p>
+          <Button asChild className="mt-6 bg-brand-700 hover:bg-brand-800">
             <Link to="/">Explorar Marketplace</Link>
           </Button>
         </div>

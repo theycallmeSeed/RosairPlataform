@@ -22,7 +22,7 @@ const formatCurrency = (value: number) =>
 const paymentOptions: { method: PaymentMethod; label: string; description: string; icon: typeof Smartphone }[] = [
   { method: "M-Pesa", label: "M-Pesa", description: "Confirmação instantânea via M-Pesa.", icon: Smartphone },
   { method: "e-Mola", label: "e-Mola", description: "Confirmação instantânea via e-Mola.", icon: Banknote },
-  { method: "Transferência Bancária", label: "Transferência Bancária", description: "Requer confirmação manual da Roseair após envio do comprovativo.", icon: Landmark },
+  { method: "Transferência Bancária", label: "Transferência Bancária", description: "Requer confirmação manual da Linkano após envio do comprovativo.", icon: Landmark },
 ];
 
 export default function CheckoutPage() {
@@ -51,10 +51,10 @@ export default function CheckoutPage() {
       <main className="min-h-screen bg-slate-50 text-slate-950">
         <SiteHeader />
         <section className="mx-auto max-w-3xl px-6 py-20 text-center">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Checkout</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Checkout</Badge>
           <h1 className="mt-6 text-3xl font-bold tracking-tight">O seu carrinho está vazio</h1>
           <p className="mt-4 text-slate-600">Adicione produtos ao carrinho antes de avançar para o checkout.</p>
-          <Button asChild className="mt-8 bg-red-700 hover:bg-red-800">
+          <Button asChild className="mt-8 bg-brand-700 hover:bg-brand-800">
             <Link to="/">Explorar Marketplace</Link>
           </Button>
         </section>
@@ -68,12 +68,12 @@ export default function CheckoutPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Button asChild variant="ghost" className="mb-4 text-red-700 hover:bg-red-50 hover:text-red-800">
+          <Button asChild variant="ghost" className="mb-4 text-brand-700 hover:bg-brand-50 hover:text-brand-800">
             <Link to="/cart"><ArrowLeft className="mr-2 h-4 w-4" /> Voltar ao Carrinho</Link>
           </Button>
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Checkout</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Checkout</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Finalizar Compra</h1>
-          <p className="mt-2 text-slate-600">O pagamento é sempre efectuado à Roseair — nunca directamente ao agente.</p>
+          <p className="mt-2 text-slate-600">O pagamento é sempre efectuado à Linkano — nunca directamente ao agente.</p>
         </div>
       </section>
 
@@ -81,7 +81,7 @@ export default function CheckoutPage() {
         <div className="space-y-6">
           <Card className="border-slate-200 bg-white">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Building2 className="h-5 w-5 text-red-700" /> Dados de Entrega</CardTitle>
+              <CardTitle className="flex items-center gap-2"><Building2 className="h-5 w-5 text-brand-700" /> Dados de Entrega</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
@@ -112,11 +112,11 @@ export default function CheckoutPage() {
                 <label
                   key={m}
                   className={`flex cursor-pointer items-start gap-4 rounded-2xl border p-4 transition ${
-                    method === m ? "border-red-300 bg-red-50" : "border-slate-200 hover:border-red-200"
+                    method === m ? "border-brand-300 bg-brand-50" : "border-slate-200 hover:border-brand-200"
                   }`}
                 >
-                  <input type="radio" name="payment" className="mt-1 h-4 w-4 accent-red-700" checked={method === m} onChange={() => setMethod(m)} />
-                  <Icon className="mt-0.5 h-5 w-5 text-red-700" />
+                  <input type="radio" name="payment" className="mt-1 h-4 w-4 accent-brand-700" checked={method === m} onChange={() => setMethod(m)} />
+                  <Icon className="mt-0.5 h-5 w-5 text-brand-700" />
                   <div>
                     <p className="font-semibold">{label}</p>
                     <p className="text-sm text-slate-500">{description}</p>
@@ -127,7 +127,7 @@ export default function CheckoutPage() {
           </Card>
         </div>
 
-        <Card className="border-red-100 bg-white lg:sticky lg:top-24">
+        <Card className="border-brand-100 bg-white lg:sticky lg:top-24">
           <CardHeader>
             <CardTitle>Resumo da Encomenda</CardTitle>
           </CardHeader>
@@ -143,12 +143,12 @@ export default function CheckoutPage() {
             <Separator />
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold">Total a Pagar</span>
-              <span className="text-xl font-bold text-red-700">{formatCurrency(total)}</span>
+              <span className="text-xl font-bold text-brand-700">{formatCurrency(total)}</span>
             </div>
-            <Button className="w-full bg-red-700 hover:bg-red-800" disabled={!isAddressValid || submitting} onClick={handleConfirm}>
+            <Button className="w-full bg-brand-700 hover:bg-brand-800" disabled={!isAddressValid || submitting} onClick={handleConfirm}>
               Confirmar e Pagar
             </Button>
-            <p className="text-xs text-slate-400">Ao confirmar, a Roseair gera a factura e inicia a coordenação com o(s) agente(s) responsáveis.</p>
+            <p className="text-xs text-slate-400">Ao confirmar, a Linkano gera a factura e inicia a coordenação com o(s) agente(s) responsáveis.</p>
           </CardContent>
         </Card>
       </section>

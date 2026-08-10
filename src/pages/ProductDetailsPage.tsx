@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { products } from "@/data/products";
 import { addToCart } from "@/lib/cart";
 
-const SAVED_KEY = "roseair_saved_products";
+const SAVED_KEY = "linkano_saved_products";
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("en-US", {
@@ -57,10 +57,10 @@ export default function ProductDetailsPage() {
     return (
       <main className="min-h-screen bg-slate-50 text-slate-950">
         <section className="mx-auto max-w-7xl px-6 py-20 text-center">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Produto não encontrado</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Produto não encontrado</Badge>
           <h1 className="mt-6 text-4xl font-bold tracking-tight">Produto não disponível</h1>
           <p className="mt-4 text-slate-600">O produto que procura não existe ou foi removido.</p>
-          <Button asChild className="mt-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700">
+          <Button asChild className="mt-8 bg-brand-600 hover:bg-brand-700">
             <Link to="/marketplace">Voltar ao Marketplace</Link>
           </Button>
         </section>
@@ -73,7 +73,7 @@ export default function ProductDetailsPage() {
       <SiteHeader />
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Button asChild variant="ghost" className="mb-6 text-orange-600 hover:bg-orange-50 hover:text-orange-700">
+          <Button asChild variant="ghost" className="mb-6 text-brand-600 hover:bg-brand-50 hover:text-brand-700">
             <Link to="/marketplace">
               <ArrowLeft className="mr-2 h-4 w-4" /> Voltar ao Marketplace
             </Link>
@@ -84,22 +84,22 @@ export default function ProductDetailsPage() {
                 <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 <div className="absolute left-4 top-4">
-                  <Badge className="bg-white text-orange-600 shadow-sm hover:bg-white">{product.category}</Badge>
+                  <Badge className="bg-white text-brand-600 shadow-sm hover:bg-white">{product.category}</Badge>
                 </div>
               </div>
               <h1 className="text-4xl font-bold tracking-tight">{product.name}</h1>
               <p className="mt-2 text-slate-600">ID do Produto: {product.id}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <Badge variant="outline" className={`border-emerald-200 text-emerald-700 ${product.stockStatus !== "Pronto para envio" ? "hidden" : ""}`}>Pronto para envio</Badge>
-                <Badge variant="outline" className={`border-amber-200 text-amber-700 ${product.stockStatus !== "Stock limitado" ? "hidden" : ""}`}>Stock limitado</Badge>
+                <Badge variant="outline" className={`border-gold-200 text-gold-700 ${product.stockStatus !== "Stock limitado" ? "hidden" : ""}`}>Stock limitado</Badge>
                 <Badge variant="outline" className={`border-slate-200 text-slate-600 ${product.stockStatus !== "Em produção" ? "hidden" : ""}`}>Em produção</Badge>
-                <Badge className="bg-orange-50 text-orange-600 hover:bg-orange-50">{product.customsStatus}</Badge>
+                <Badge className="bg-brand-50 text-brand-600 hover:bg-brand-50">{product.customsStatus}</Badge>
                 <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-50">Verificado</Badge>
               </div>
               <div className="mt-6 grid gap-4 sm:grid-cols-3">
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
                   <p className="text-sm text-slate-500">Preço</p>
-                  <p className="mt-1 text-xl font-bold text-orange-600">{formatCurrency(product.price)} / {product.unit}</p>
+                  <p className="mt-1 text-xl font-bold text-brand-600">{formatCurrency(product.price)} / {product.unit}</p>
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
                   <p className="text-sm text-slate-500">MOQ</p>
@@ -113,24 +113,24 @@ export default function ProductDetailsPage() {
 
               <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
-                  <CheckCircle2 className="h-4 w-4 text-orange-600" />
+                  <CheckCircle2 className="h-4 w-4 text-brand-600" />
                   <div><p className="text-xs text-slate-500">Fornecedor</p><p className="font-medium">{product.agent}</p></div>
                 </div>
                 <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
-                  <MapPin className="h-4 w-4 text-orange-600" />
+                  <MapPin className="h-4 w-4 text-brand-600" />
                   <div><p className="text-xs text-slate-500">Origem</p><p className="font-medium">{product.origin}</p></div>
                 </div>
                 <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
-                  <Warehouse className="h-4 w-4 text-orange-600" />
+                  <Warehouse className="h-4 w-4 text-brand-600" />
                   <div><p className="text-xs text-slate-500">Armazém</p><p className="font-medium">{product.warehouse}</p></div>
                 </div>
                 <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
-                  <Ship className="h-4 w-4 text-orange-600" />
+                  <Ship className="h-4 w-4 text-brand-600" />
                   <div><p className="text-xs text-slate-500">Frete</p><p className="font-medium">{product.freightMode} · {product.incoterm}</p></div>
                 </div>
               </div>
             </div>
-            <Card className="border-red-100 bg-white">
+            <Card className="border-brand-100 bg-white">
               <CardHeader>
                 <CardTitle>Comprar</CardTitle>
               </CardHeader>
@@ -142,12 +142,12 @@ export default function ProductDetailsPage() {
                   </div>
                   <div className="mt-2 flex items-center gap-3">
                     <button
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
                       onClick={() => setQty(Math.max(product.moq, qty - product.moq))}
                     >−</button>
                     <span className="min-w-[4rem] text-center text-2xl font-bold tabular-nums">{qty.toLocaleString()}</span>
                     <button
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 text-lg font-semibold transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-600"
                       onClick={() => setQty(qty + product.moq)}
                     >+</button>
                   </div>
@@ -176,14 +176,14 @@ export default function ProductDetailsPage() {
                   <Separator className="my-3" />
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold">Valor Total</span>
-                    <span className="text-xl font-bold text-orange-600">{formatCurrency(product.price * qty)}</span>
+                    <span className="text-xl font-bold text-brand-600">{formatCurrency(product.price * qty)}</span>
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-400">Preço final Roseair — inclui frete, desalfandegamento e comissão de operação. Sem custos ocultos.</p>
+                <p className="text-xs text-slate-400">Preço final Linkano — inclui frete, desalfandegamento e comissão de operação. Sem custos ocultos.</p>
 
                 <Button
-                  className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700"
+                  className="w-full bg-brand-600 hover:bg-brand-700"
                   onClick={() => {
                     addToCart(product.id, qty);
                     navigate("/checkout");
@@ -228,7 +228,7 @@ export default function ProductDetailsPage() {
 
               return (
                 <div key={String(label)} className="flex gap-3 rounded-2xl border border-slate-200 p-4">
-                  <DetailIcon className="h-5 w-5 text-orange-600" />
+                  <DetailIcon className="h-5 w-5 text-brand-600" />
                   <div>
                     <p className="text-sm text-slate-500">{String(label)}</p>
                     <p className="font-semibold">{String(value)}</p>
@@ -266,7 +266,7 @@ export default function ProductDetailsPage() {
         <Card className="border-slate-200 bg-white">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ClipboardCheck className="h-5 w-5 text-orange-600" /> Cronograma Logístico
+              <ClipboardCheck className="h-5 w-5 text-brand-600" /> Cronograma Logístico
             </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-4">
@@ -277,7 +277,7 @@ export default function ProductDetailsPage() {
               `Recepção no armazém de ${product.warehouse}`,
             ].map((step, index) => (
               <div key={step} className="rounded-2xl border border-slate-200 p-4">
-                <Badge className="bg-orange-50 text-orange-600 hover:bg-orange-50">Passo {index + 1}</Badge>
+                <Badge className="bg-brand-50 text-brand-600 hover:bg-brand-50">Passo {index + 1}</Badge>
                 <p className="mt-3 font-semibold">{step}</p>
               </div>
             ))}
@@ -287,7 +287,7 @@ export default function ProductDetailsPage() {
 
       <section className="mx-auto max-w-7xl px-6 pb-12">
         <h2 className="mb-6 flex items-center gap-2 text-lg font-bold">
-          <Boxes className="h-5 w-5 text-orange-600" /> Outros Agentes Nesta Categoria
+          <Boxes className="h-5 w-5 text-brand-600" /> Outros Agentes Nesta Categoria
         </h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {products
@@ -302,7 +302,7 @@ export default function ProductDetailsPage() {
 
       <section className="mx-auto max-w-7xl px-6 pb-12">
         <h2 className="mb-6 flex items-center gap-2 text-lg font-bold">
-          <Boxes className="h-5 w-5 text-orange-600" /> Também Pode Interessar
+          <Boxes className="h-5 w-5 text-brand-600" /> Também Pode Interessar
         </h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {products

@@ -79,14 +79,14 @@ export default function AgentNewProductPage() {
     return (
       <main className="min-h-screen bg-slate-50 text-slate-950">
         <section className="mx-auto flex max-w-lg flex-col items-center px-6 py-32 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-100">
-            <Clock3 className="h-10 w-10 text-amber-600" />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gold-100">
+            <Clock3 className="h-10 w-10 text-gold-600" />
           </div>
           <h1 className="mt-8 text-3xl font-bold tracking-tight">Produto submetido para aprovação</h1>
           <p className="mt-4 text-slate-600">
-            A Roseair irá rever o produto, calcular o preço final de marketplace (frete, desalfandegamento, comissão) e aprová-lo antes de ficar visível aos compradores.
+            A Linkano irá rever o produto, calcular o preço final de marketplace (frete, desalfandegamento, comissão) e aprová-lo antes de ficar visível aos compradores.
           </p>
-          <Button asChild className="mt-8 bg-red-700 hover:bg-red-800">
+          <Button asChild className="mt-8 bg-brand-700 hover:bg-brand-800">
             <Link to="/agent">Voltar ao Painel do Agente</Link>
           </Button>
         </section>
@@ -100,13 +100,13 @@ export default function AgentNewProductPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-5xl px-6 py-8">
-          <Button asChild variant="ghost" className="mb-6 text-red-700 hover:bg-red-50 hover:text-red-800">
+          <Button asChild variant="ghost" className="mb-6 text-brand-700 hover:bg-brand-50 hover:text-brand-800">
             <Link to="/agent"><ArrowLeft className="mr-2 h-4 w-4" /> Voltar ao Painel</Link>
           </Button>
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Submeter Produto</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Submeter Produto</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Novo Produto</h1>
           <p className="mt-2 text-slate-600">
-            Preencha os detalhes do produto. A Roseair calcula o preço final de marketplace e aprova antes da publicação — os agentes não publicam directamente.
+            Preencha os detalhes do produto. A Linkano calcula o preço final de marketplace e aprova antes da publicação — os agentes não publicam directamente.
           </p>
         </div>
       </section>
@@ -141,7 +141,7 @@ export default function AgentNewProductPage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Descreva o produto, especificações técnicas, condições de fornecimento..."
-                  className="flex min-h-[100px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex min-h-[100px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </div>
               <div>
@@ -159,7 +159,7 @@ export default function AgentNewProductPage() {
             <CardHeader>
               <CardTitle className="text-xl">Comercial</CardTitle>
               <p className="text-sm text-slate-500">
-                Indique apenas o seu custo de fornecedor. A Roseair adiciona frete, CBM, custos operacionais, seguro e comissão para calcular o preço final de marketplace — nunca visível ao comprador.
+                Indique apenas o seu custo de fornecedor. A Linkano adiciona frete, CBM, custos operacionais, seguro e comissão para calcular o preço final de marketplace — nunca visível ao comprador.
               </p>
             </CardHeader>
             <CardContent className="grid gap-5 sm:grid-cols-2">
@@ -215,13 +215,13 @@ export default function AgentNewProductPage() {
             <CardContent>
               <div className="flex flex-wrap gap-4">
                 {stockStatuses.map((s) => (
-                  <label key={s} className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 px-5 py-3 text-sm transition has-[:checked]:border-red-300 has-[:checked]:bg-red-50">
+                  <label key={s} className="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 px-5 py-3 text-sm transition has-[:checked]:border-brand-300 has-[:checked]:bg-brand-50">
                     <input
                       type="radio"
                       name="stockStatus"
                       checked={stockStatus === s}
                       onChange={() => setStockStatus(s)}
-                      className="h-4 w-4 accent-red-700"
+                      className="h-4 w-4 accent-brand-700"
                     />
                     {s}
                   </label>
@@ -256,7 +256,7 @@ export default function AgentNewProductPage() {
                 <button
                   type="button"
                   onClick={handleImageUpload}
-                  className="flex h-36 w-48 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 text-slate-400 transition hover:border-red-300 hover:text-red-700"
+                  className="flex h-36 w-48 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 text-slate-400 transition hover:border-brand-300 hover:text-brand-700"
                 >
                   <ImagePlus className="h-8 w-8" />
                   <span className="text-sm font-medium">Upload de Imagem</span>
@@ -267,7 +267,7 @@ export default function AgentNewProductPage() {
                     <button
                       type="button"
                       onClick={() => setImagePreview("")}
-                      className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-700 text-white shadow-sm"
+                      className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand-700 text-white shadow-sm"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -280,7 +280,7 @@ export default function AgentNewProductPage() {
           <Separator />
 
           <div className="flex flex-col gap-3 pb-12 sm:flex-row sm:justify-end">
-            <Button className="bg-red-700 hover:bg-red-800" onClick={handleSubmit} disabled={!isFormValid()}>
+            <Button className="bg-brand-700 hover:bg-brand-800" onClick={handleSubmit} disabled={!isFormValid()}>
               <CheckCircle2 className="mr-2 h-4 w-4" /> Submeter para Aprovação
             </Button>
           </div>
