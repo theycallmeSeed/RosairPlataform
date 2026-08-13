@@ -30,7 +30,7 @@ Detailed in `pricing-engine.md`.
 
 ## 4. Marketplace / Storefront (Buyer-facing composition of Catalog + Pricing)
 
-**Purpose**: The Buyer's entry point and primary shopping experience — this is the homepage (`business.md §6`: "Homepage IS the Marketplace").
+**Purpose**: The Buyer's entry point and primary shopping experience — this is the homepage. `business.md §5` (Official Business Flow) begins the canonical flow directly at "Marketplace," with no landing-page step preceding it, which is the authoritative basis for treating the homepage as the Marketplace itself.
 
 **Key features**: Search-first homepage, category navigation, rich product cards (image, price, trust badges — "Linkano Official Partner"), product detail page, related products.
 

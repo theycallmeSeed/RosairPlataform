@@ -18,7 +18,7 @@ import ProductDetailsPage from "@/pages/ProductDetailsPage";
 
 export const router = createBrowserRouter([
   {
-    // Homepage IS the Marketplace (business.md §6) — no separate landing page.
+    // Homepage IS the Marketplace (business.md §5, Official Business Flow) — no separate landing page.
     path: "/",
     element: <MarketplacePage />,
   },

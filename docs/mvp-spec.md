@@ -102,7 +102,7 @@ At the time this document was written, `src/pages` still carried scaffolding fro
 
 | Existing Page (original) | Disposition (original plan) |
 |---|---|
-| `LandingPage.tsx` | Remove or repurpose — Homepage IS the Marketplace (`business.md §6`), no separate corporate landing page. |
+| `LandingPage.tsx` | Remove or repurpose — Homepage IS the Marketplace (`business.md §5`, Official Business Flow begins at "Marketplace"), no separate corporate landing page. |
 | `MarketplacePage.tsx` | Keep — becomes the homepage. |
 | `ProductDetailsPage.tsx` | Keep — must show only Marketplace Price, never cost breakdown. |
 | `AdminQuotesPage.tsx` | Remove/replace with Order Management + Payment Reconciliation views. |

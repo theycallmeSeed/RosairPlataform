@@ -84,7 +84,7 @@ function SectionHeader({ eyebrow, title, icon, action }: { eyebrow: string; titl
 }
 
 /**
- * Homepage IS the Marketplace (business.md §6). This page is the discovery
+ * Homepage IS the Marketplace (business.md §5, Official Business Flow). This page is the discovery
  * surface only — sections, banners, rails. Search/browsing with real filters
  * lives on CatalogPage (/marketplace).
  */
