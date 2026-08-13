@@ -1,4 +1,4 @@
-# Roseair Marketplace — Development Roadmap
+# Linkano Marketplace — Development Roadmap
 
 This is the **engineering execution** companion to `roadmap.md`. It sequences technical delivery within Phase 1 (MVP) at a level useful for sprint planning, and outlines the technical entry criteria for Phases 2–4. It assumes the architecture defined in `architecture.md` and the domain in `domain-model.md`.
 
@@ -9,7 +9,7 @@ Build **bottom-up through the dependency graph** in `system-design.md §6`: Iden
 ## Milestone 0 — Foundation
 
 - Solution scaffold per `architecture.md §2` folder structure (Domain/Application/Infrastructure/Api projects + test projects).
-- PostgreSQL + EF Core wired up, base `RoseairDbContext`, migration pipeline established.
+- PostgreSQL + EF Core wired up, base `LinkanoDbContext`, migration pipeline established.
 - Serilog logging, global exception-handling middleware, health check endpoint.
 - JWT auth scaffolding (login/refresh), base `User` entity, role-based authorization policies.
 - Swagger configured, CI pipeline running build + tests on PR.

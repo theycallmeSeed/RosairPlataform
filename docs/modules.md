@@ -1,4 +1,4 @@
-# Roseair Marketplace — Modules
+# Linkano Marketplace — Modules
 
 This document describes each functional module of the platform from a product/feature perspective (complementing `system-design.md`, which describes the same modules from a technical/architectural perspective). It is the map between what a user sees and does, and the bounded context that implements it.
 
@@ -32,7 +32,7 @@ Detailed in `pricing-engine.md`.
 
 **Purpose**: The Buyer's entry point and primary shopping experience — this is the homepage (`business.md §6`: "Homepage IS the Marketplace").
 
-**Key features**: Search-first homepage, category navigation, rich product cards (image, price, trust badges — "Roseair Official Partner"), product detail page, related products.
+**Key features**: Search-first homepage, category navigation, rich product cards (image, price, trust badges — "Linkano Official Partner"), product detail page, related products.
 
 ## 5. Cart & Checkout
 
@@ -86,7 +86,12 @@ Detailed in `pricing-engine.md`.
 
 **Purpose**: Business intelligence for Roseair leadership/operations.
 
-**Key features** (per `business.md §"Reporting"`): Daily Sales, Monthly Sales, Sales per Agent, Products, Visitors, Traffic Sources, Conversion, Revenue, Complaints, Payments, Orders, Top Products, Top Agents.
+> **Documentation note**: earlier drafts of this section cited `business.md §"Reporting"` as the source for the metric list below. `business.md` has no section by that name (its §6 is "Value Proposition by Actor") and contains no dedicated reporting/analytics section — that citation was never valid and has been removed. The metric list has instead been traced against the two documents that actually define MVP/Phase-2 analytics scope:
+
+**Key features**:
+- **Grounded in `mvp.md §3` (MVP baseline scope)**: Daily Sales, Monthly Sales, Orders, Products, Complaints.
+- **Grounded in `roadmap.md` Phase 2 ("Operational")**: Sales per Agent, Top Products, Top Agents, Traffic Sources, Conversion.
+- **Not grounded in any current document — documentation gap, not resolved here**: Visitors, Revenue, Payments. These three appear in this list with no corresponding definition, scope note, or Phase assignment anywhere in `docs/`, including the `daily_sales_snapshots` / `agent_performance_snapshots` / `product_performance_snapshots` / `traffic_snapshots` tables in `database-design.md §2.8` (none of which name a "visitors," "revenue," or "payments" metric explicitly). They are left in the list as a flagged gap rather than removed (removing them would silently drop a requirement) or given an invented source.
 
 Admin-only visibility (carried forward from prior project scaffolding decision, `src/docs/docs/project-context.md`, reaffirmed here as still applicable — no business input contradicted it).
 

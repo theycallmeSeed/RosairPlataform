@@ -1,4 +1,4 @@
-# Roseair Marketplace — MVP Definition
+# Linkano Marketplace — MVP Definition
 
 ## 1. Purpose
 

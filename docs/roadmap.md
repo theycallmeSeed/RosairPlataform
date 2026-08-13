@@ -1,6 +1,6 @@
-# Roseair Marketplace — Product Roadmap
+# Linkano Marketplace — Product Roadmap
 
-This document describes the **business/product** phasing of Roseair Marketplace. For the corresponding engineering execution plan (sprints, technical milestones), see `development-roadmap.md`. For the precise MVP scope boundary, see `mvp.md` and `mvp-spec.md`.
+This document describes the **business/product** phasing of Linkano Marketplace. For the corresponding engineering execution plan (sprints, technical milestones), see `development-roadmap.md`. For the precise MVP scope boundary, see `mvp.md` and `mvp-spec.md`.
 
 ## Phase 1 — MVP
 

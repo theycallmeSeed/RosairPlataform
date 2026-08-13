@@ -1,4 +1,6 @@
-# Roseair Marketplace — Architecture
+# Linkano Marketplace — Architecture
+
+> **Naming note**: technical project/namespace names use **Linkano** (`Linkano.Domain`, `Linkano.Application`, `Linkano.Infrastructure`, `Linkano.Api`), matching the actual solution under `backend/src/`. "Roseair" is preserved only where the text refers to the operating business (e.g. `Roseair ERP` in §15, an external system belonging to that company, not to the Linkano codebase). See `business.md` for the full Linkano/Roseair distinction.
 
 ## 1. Overview
 
@@ -8,7 +10,7 @@ Backend: **ASP.NET Core 9**, C#, **Clean Architecture**, deployed initially as a
 
 ```
 src/
-  Roseair.Domain/
+  Linkano.Domain/
     Common/                      # base entity, value objects, domain event base
     Identity/                    # User, AgentProfile, BuyerProfile
     Catalog/                     # Product, Category
@@ -19,7 +21,7 @@ src/
     Support/                     # Complaint, ComplaintComment
     Analytics/                   # snapshot/read-model marker types (if any live here)
 
-  Roseair.Application/
+  Linkano.Application/
     Common/
       Behaviors/                 # MediatR pipeline behaviors (validation, logging, auth)
       Interfaces/                # IRepository<T>, IUnitOfWork, ICurrentUser, IDateTimeProvider,
@@ -41,9 +43,9 @@ src/
     Analytics/
       Queries/  Dtos/
 
-  Roseair.Infrastructure/
+  Linkano.Infrastructure/
     Persistence/
-      RoseairDbContext.cs
+      LinkanoDbContext.cs
       Configurations/            # IEntityTypeConfiguration<T> per entity
       Repositories/
       Migrations/
@@ -54,7 +56,7 @@ src/
     BackgroundJobs/              # Pricing recalculation sweep, notification dispatch
     Logging/                     # Serilog configuration
 
-  Roseair.Api/
+  Linkano.Api/
     Controllers/  (or Minimal API endpoint modules, grouped by module)
     Middleware/                  # Exception handling, request logging
     Filters/
@@ -62,14 +64,14 @@ src/
     Program.cs
     appsettings.json / appsettings.{Environment}.json
 
-  Roseair.Api.Contracts/          # (optional) shared request/response DTOs if versioning demands
+  Linkano.Api.Contracts/          # (optional) shared request/response DTOs if versioning demands
     a separately published contracts project
 
 tests/
-  Roseair.Domain.Tests/
-  Roseair.Application.Tests/
-  Roseair.Infrastructure.Tests/
-  Roseair.Api.Tests/               # integration tests (WebApplicationFactory)
+  Linkano.Domain.Tests/
+  Linkano.Application.Tests/
+  Linkano.Infrastructure.Tests/
+  Linkano.Api.Tests/               # integration tests (WebApplicationFactory)
 ```
 
 Each `Domain` subfolder above corresponds 1:1 to a bounded context in `domain-model.md §1`; `Application` mirrors it. This keeps the modular-monolith boundary visually obvious and mechanically enforceable later (folder → project split is a low-effort refactor if/when a module is extracted per `system-design.md §5`).
@@ -92,7 +94,7 @@ Enforcement: project references restrict what's physically possible to reference
 
 ## 4. CQRS Readiness
 
-MVP uses **MediatR-style Commands and Queries** within a single `Application` layer and a single `RoseairDbContext` (not full CQRS with separate write/read stores) — this gives the *shape* of CQRS (clear command/query separation, thin handlers, pipeline behaviors for validation/logging/auth) without the operational cost of a separate read database.
+MVP uses **MediatR-style Commands and Queries** within a single `Application` layer and a single `LinkanoDbContext` (not full CQRS with separate write/read stores) — this gives the *shape* of CQRS (clear command/query separation, thin handlers, pipeline behaviors for validation/logging/auth) without the operational cost of a separate read database.
 
 - **Commands**: mutate state, return minimal data (e.g., created id), always validated via FluentValidation pipeline behavior before reaching the handler.
 - **Queries**: read-only, may use projection/`AsNoTracking` freely, can bypass repository abstractions and query `DbContext` directly for performance where justified (pragmatic CQRS, not dogmatic).
@@ -172,6 +174,6 @@ Full read/write store separation (event sourcing, separate reporting DB) is a Ph
 ## 16. Related Documents
 
 - `system-design.md` — module boundaries this architecture implements.
-- `domain-model.md` — the entities living in `Roseair.Domain`.
-- `api-design.md` — what `Roseair.Api` exposes.
+- `domain-model.md` — the entities living in `Linkano.Domain`.
+- `api-design.md` — what `Linkano.Api` exposes.
 - `database-design.md` — what `Infrastructure/Persistence` maps to.

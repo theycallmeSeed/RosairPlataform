@@ -1,18 +1,20 @@
-# Roseair Marketplace — Business Documentation
+# Linkano Marketplace — Business Documentation
+
+> **Naming note**: "Linkano" is the platform/product/marketplace and the technical solution described throughout this documentation set. "Roseair" is the business/operator/logistics company responsible for operating Linkano — it is preserved wherever text refers to that company's operational, financial, or legal responsibility (e.g. "Roseair supervises...", "Roseair approves...", "payments are made to Roseair"). See `architecture.md` for the corresponding technical naming (`Linkano.Domain`, `Linkano.Api`, etc.).
 
 ## 1. Purpose of This Document
 
-This document defines the business context, business model, actors, value proposition and strategic direction of Roseair Marketplace. It is the foundation from which `business-rules.md`, `domain-model.md`, `pricing-engine.md` and all other technical documents are derived. When a technical decision is ambiguous, this document is the tiebreaker.
+This document defines the business context, business model, actors, value proposition and strategic direction of Linkano Marketplace. It is the foundation from which `business-rules.md`, `domain-model.md`, `pricing-engine.md` and all other technical documents are derived. When a technical decision is ambiguous, this document is the tiebreaker.
 
 ## 2. Company Context
 
 Roseair is a logistics and international trade company operating primarily out of Mozambique, facilitating the import of goods (largely sourced from China and other international markets) for Mozambican businesses. Historically this trade has been conducted informally — WhatsApp groups, personal broker relationships, ad-hoc quotations — with no centralized trust layer, no price transparency, and no standardized operational pipeline from purchase to delivery.
 
-Roseair Marketplace is the digitization and formalization of that trade relationship, with Roseair positioned not as a passive listing site but as the **operational and financial control point** of every transaction.
+Linkano Marketplace is the digitization and formalization of that trade relationship, with Roseair positioned not as a passive listing site but as the **operational and financial control point** of every transaction.
 
-## 3. What Roseair Marketplace Is
+## 3. What Linkano Marketplace Is
 
-Roseair Marketplace is a **Managed B2B Marketplace**. The defining characteristic that separates it from a generic e-commerce platform or a peer-to-peer marketplace (e.g., Alibaba) is that **Roseair supervises and controls the complete purchasing operation end-to-end**:
+Linkano Marketplace is a **Managed B2B Marketplace**. The defining characteristic that separates it from a generic e-commerce platform or a peer-to-peer marketplace (e.g., Alibaba) is that **Roseair supervises and controls the complete purchasing operation end-to-end**:
 
 - Roseair approves every Agent before they can sell.
 - Roseair approves every Product before it is published.
@@ -23,7 +25,7 @@ Roseair Marketplace is a **Managed B2B Marketplace**. The defining characteristi
 
 This is analogous to a marketplace acting simultaneously as: escrow agent, freight forwarder, customs broker, and trust/reputation authority — layered on top of a product catalog and storefront experience.
 
-### 3.1 What Roseair Marketplace Is NOT
+### 3.1 What Linkano Marketplace Is NOT
 
 - **Not** a generic e-commerce storefront (single-seller, direct-payment model).
 - **Not** an Alibaba clone — Alibaba is peer-to-peer with buyer/supplier negotiating and transacting directly; Roseair intermediates every transaction.
@@ -46,7 +48,7 @@ A verified international sourcing partner (today, primarily China-based) respons
 - Preparing export/shipping documentation.
 - Communicating with Buyers pre- and post-purchase (under Roseair supervision).
 
-Agents are presented publicly as **"Roseair Official Partner"** — the platform's brand equity, not the Agent's own brand, is what is being sold to the Buyer. This is a deliberate trust-transfer mechanism.
+Agents are presented publicly as **"Linkano Official Partner"** — the platform's brand equity, not the Agent's own brand, is what is being sold to the Buyer. This is a deliberate trust-transfer mechanism.
 
 ### 4.3 Roseair (Platform Operator / Admin)
 Roseair is simultaneously the platform owner and an active operational participant. Responsibilities:

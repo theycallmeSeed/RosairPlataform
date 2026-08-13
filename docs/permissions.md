@@ -1,4 +1,4 @@
-# Roseair Marketplace — Permissions & Authorization Model
+# Linkano Marketplace — Permissions & Authorization Model
 
 ## 1. Roles
 

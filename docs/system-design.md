@@ -1,8 +1,8 @@
-# Roseair Marketplace — System Design
+# Linkano Marketplace — System Design
 
 ## 1. High-Level Architecture
 
-Roseair Marketplace is delivered as a **modular monolith** on ASP.NET Core 9, organized by bounded context (`domain-model.md §1`), deployed as a single API service in MVP with clear internal module boundaries that allow future extraction into independently deployable services (Pricing Engine and Analytics are the most likely first candidates — see §5).
+Linkano Marketplace is delivered as a **modular monolith** on ASP.NET Core 9, organized by bounded context (`domain-model.md §1`), deployed as a single API service in MVP with clear internal module boundaries that allow future extraction into independently deployable services (Pricing Engine and Analytics are the most likely first candidates — see §5).
 
 ```mermaid
 flowchart TB

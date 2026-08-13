@@ -1,4 +1,4 @@
-# Roseair Marketplace — Database Design
+# Linkano Marketplace — Database Design
 
 Target: **PostgreSQL**, accessed via **EF Core**. This document maps `domain-model.md` to tables, defines conventions, and specifies cross-cutting persistence strategies. Column-level DDL is intentionally omitted (implementation detail generated from EF Core configurations) — this document defines *shape, relationships, and rules*, not literal SQL.
 

@@ -1,4 +1,4 @@
-# Roseair Marketplace — User Flows
+# Linkano Marketplace — User Flows
 
 This document walks through the primary end-to-end flows referenced across `business.md`, `business-rules.md`, and `modules.md`, at the level of screens/actions and system reactions.
 

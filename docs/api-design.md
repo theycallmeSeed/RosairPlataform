@@ -1,4 +1,4 @@
-# Roseair Marketplace — API Design
+# Linkano Marketplace — API Design
 
 ## 1. Style
 
@@ -147,7 +147,7 @@ GET    /api/v1/admin/analytics/conversion
 Standard error shape (aligned with [RFC 7807 Problem Details](https://www.rfc-editor.org/rfc/rfc7807)):
 ```json
 {
-  "type": "https://roseair.example/errors/invalid-order-transition",
+  "type": "https://linkano.example/errors/invalid-order-transition",
   "title": "Invalid Order Transition",
   "status": 409,
   "detail": "Order cannot move from 'Delivered' to 'Shipped'.",
@@ -163,7 +163,7 @@ Standard error shape (aligned with [RFC 7807 Problem Details](https://www.rfc-ed
 
 ## 9. Future Webhook Support
 
-Outbound webhooks (Roseair → external systems, e.g., an ERP or a future partner integration) are a Phase 3+ capability (`business-rules.md BR-FUT` context, `architecture.md §15`). Planned shape: subscriber-configured endpoint + shared secret, HMAC-signed payload, event types mirroring the domain events in `domain-model.md §5` (`OrderPlaced`, `OrderStatusChanged`, `PaymentConfirmed`, etc.), with retry/backoff and a delivery log for observability.
+Outbound webhooks (Linkano → external systems, e.g., an ERP or a future partner integration) are a Phase 3+ capability (`business-rules.md BR-FUT` context, `architecture.md §15`). Planned shape: subscriber-configured endpoint + shared secret, HMAC-signed payload, event types mirroring the domain events in `domain-model.md §5` (`OrderPlaced`, `OrderStatusChanged`, `PaymentConfirmed`, etc.), with retry/backoff and a delivery log for observability.
 
 ## 10. Related Documents
 

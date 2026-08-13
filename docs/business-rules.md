@@ -1,4 +1,4 @@
-# Roseair Marketplace — Business Rules
+# Linkano Marketplace — Business Rules
 
 This document enumerates the enforceable business rules of the platform. Each rule is written to be directly traceable to a validation, authorization check, or state-machine guard in the backend. Rules are grouped by domain area. Rule IDs are stable identifiers (`BR-<AREA>-<NUM>`) to be referenced from code comments, tests, and PRs.
 
@@ -27,7 +27,7 @@ This document enumerates the enforceable business rules of the platform. Each ru
 - **BR-AGT-02**: Agent approval requires (per business input) verification of: physical company existence, verified market reputation, existing customer references, and market representation in the sourcing country (e.g., China). These are captured as structured `AgentVerificationDocument` records reviewed manually by an Admin (no automated verification in MVP).
 - **BR-AGT-03**: Agent application states: `PendingReview → Approved | Rejected`. A `Rejected` Agent may re-apply (creates a new application; history retained).
 - **BR-AGT-04**: An `Approved` Agent can be suspended (`Suspended`) by an Admin at any time for policy violations; a suspended Agent's products are automatically unpublished (see BR-PRD-08).
-- **BR-AGT-05**: Every Agent is displayed publicly with the badge "Roseair Official Partner" — no Agent-specific branding/storefront that competes with Roseair's brand is permitted in MVP.
+- **BR-AGT-05**: Every Agent is displayed publicly with the badge "Linkano Official Partner" — no Agent-specific branding/storefront that competes with Roseair's brand is permitted in MVP.
 
 ## 4. Product Rules
 

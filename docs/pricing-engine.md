@@ -1,4 +1,4 @@
-# Roseair Marketplace — Pricing Engine
+# Linkano Marketplace — Pricing Engine
 
 ## 1. Purpose
 

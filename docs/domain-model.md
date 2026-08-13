@@ -1,4 +1,4 @@
-# Roseair Marketplace — Domain Model
+# Linkano Marketplace — Domain Model
 
 This document defines the domain entities, aggregates, value objects and relationships that implement `business.md` and `business-rules.md`. It is written in Domain-Driven Design (DDD) terms and is the direct input to `database-design.md` (persistence mapping) and the Clean Architecture `Domain` layer described in `architecture.md`.
 

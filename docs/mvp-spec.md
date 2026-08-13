@@ -1,4 +1,4 @@
-# Roseair Marketplace — MVP Functional Specification
+# Linkano Marketplace — MVP Functional Specification
 
 This is the functional/screen-level companion to `mvp.md`. It supersedes the earlier quotation-based scaffold (`src/docs/mvp-spec.md`, `src/docs/docs/*`) — the authoritative flow has **no quotation step**; products are purchasable at a calculated price immediately (`business.md §3.1 decision note`).
 
@@ -94,9 +94,13 @@ Removed from the earlier scaffold's entity list as no longer applicable: `QuoteR
 
 ## 5. Frontend Scaffold Reconciliation
 
-The existing `src/pages` scaffold (`AdminQuotesPage.tsx`, `QuoteRequestSuccessPage.tsx`) reflects the superseded quotation model and must be reconciled against this spec before/while implementing the backend described in `architecture.md` and `api-design.md`:
+This section has three layers, kept distinct rather than collapsed into one: what the **original MVP structure** looked like when this reconciliation was first written, what the **subsequent implementation/reconciliation** did about it, and what the **current structure** actually is (verified by direct inspection of `src/pages` and `src/app/router.tsx` in the present repository). Nothing below is erased from the original record — the original plan is preserved as-written, with status added alongside it.
 
-| Existing Page | Disposition |
+### 5.1 Original MVP Structure (as originally specified)
+
+At the time this document was written, `src/pages` still carried scaffolding from an earlier, superseded quotation-based flow (`business.md §3.1` decision note): `LandingPage.tsx`, `AdminQuotesPage.tsx`, `QuoteRequestSuccessPage.tsx`. The original reconciliation plan was:
+
+| Existing Page (original) | Disposition (original plan) |
 |---|---|
 | `LandingPage.tsx` | Remove or repurpose — Homepage IS the Marketplace (`business.md §6`), no separate corporate landing page. |
 | `MarketplacePage.tsx` | Keep — becomes the homepage. |
@@ -108,7 +112,33 @@ The existing `src/pages` scaffold (`AdminQuotesPage.tsx`, `QuoteRequestSuccessPa
 | `AdminDashboardPage.tsx`, `AnalyticsDashboardPage.tsx` | Keep — align to MVP Analytics scope (`mvp.md §3`). |
 | `BuyerDashboardPage.tsx` | Keep — becomes Order History / Purchase History. |
 
-This reconciliation is a frontend implementation task, not a documentation change, and is called out here so it isn't missed when backend implementation begins.
+### 5.2 Subsequent Implementation / Reconciliation (what happened)
+
+The frontend was subsequently rebuilt/reconciled against this plan. Confirmed by direct inspection of the current repository (`src/pages/`, `src/app/router.tsx`):
+
+- `LandingPage.tsx`, `AdminQuotesPage.tsx`, and `QuoteRequestSuccessPage.tsx` were removed — none of the three exists in the current repository.
+- `MarketplacePage.tsx` is wired as the homepage (`router.tsx`: `path: "/"`).
+- A `CatalogPage.tsx` was introduced (`/marketplace`) that did not exist in the original plan — it splits "discovery" (homepage) from "search everything" (catalog), a refinement of, not a contradiction to, the original disposition.
+- `CheckoutConfirmationPage.tsx` exists and fulfils the "replace `QuoteRequestSuccessPage.tsx`" disposition.
+- `AdminOrdersPage.tsx` exists and fulfils the "Order Management" half of the `AdminQuotesPage.tsx` replacement.
+- `AgentApprovalPage.tsx`, `AgentDashboardPage.tsx`, `AgentNewProductPage.tsx`, `AdminDashboardPage.tsx`, `AnalyticsDashboardPage.tsx`, `BuyerDashboardPage.tsx` all still exist, matching their "Keep" dispositions.
+- `AdminProductReviewPage.tsx` exists (not named in the original table) as the Product Review Queue referenced elsewhere in this document (§3).
+
+### 5.3 Current Structure — Status vs. Original Disposition
+
+| Original Page | Current Equivalent | Status |
+|---|---|---|
+| `LandingPage.tsx` | — (removed) | **Done** — no separate landing page; homepage is the Marketplace. |
+| `MarketplacePage.tsx` | `MarketplacePage.tsx` (`/`) | **Done**. |
+| `ProductDetailsPage.tsx` | `ProductDetailsPage.tsx` (`/product/:id`) | **Done** as far as documentation review can confirm — shows a single final price, no cost-breakdown fields present. |
+| `AdminQuotesPage.tsx` | `AdminOrdersPage.tsx` (`/admin/orders`) | **Partially done.** Order Management exists. A dedicated **Payment Reconciliation** view (Bank Transfer manual reconciliation, `BR-PAY-05`) does not exist anywhere in the current frontend — this half of the original disposition was not carried out and remains open. |
+| `QuoteRequestSuccessPage.tsx` | `CheckoutConfirmationPage.tsx` (`/checkout/confirmation`) | **Done**. |
+| `AgentApprovalPage.tsx` | `AgentApprovalPage.tsx` (`/admin/agents`) | **Done**. |
+| `AgentDashboardPage.tsx`, `AgentNewProductPage.tsx` | Same names/routes | **Done** — no quotation-specific fields found in the current Agent product data shape. |
+| `AdminDashboardPage.tsx`, `AnalyticsDashboardPage.tsx` | Same names/routes | **Partially done.** Both pages exist and render. `AdminDashboardPage.tsx` is unchanged in scope. `AnalyticsDashboardPage.tsx`'s alignment to "MVP Analytics scope" (`mvp.md §3`: Daily/Monthly Sales, Orders, Products, Complaints computed from real transactional data) is not yet achieved — it currently computes over the static product catalog, not over real orders. This is a backend/data-wiring gap, not a page that's missing. |
+| `BuyerDashboardPage.tsx` | `BuyerDashboardPage.tsx` (`/buyer`) | **Done** — functions as Order History / Purchase History (orders + saved products). |
+
+This reconciliation remains, as originally noted, primarily a **frontend implementation task** — the documentation update here only records that it was carried out and where it still falls short (Payment Reconciliation view; Analytics on real data), so these two gaps aren't lost when backend implementation begins.
 
 ## 6. Strategic Objective (carried forward, reaffirmed)
 
