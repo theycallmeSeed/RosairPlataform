@@ -46,12 +46,12 @@ const categoryIcons: Record<string, typeof Boxes> = {
 };
 
 const categoryTheme = [
-  "from-orange-500 to-red-600",
-  "from-red-500 to-rose-600",
-  "from-amber-500 to-orange-600",
-  "from-rose-500 to-red-700",
-  "from-orange-600 to-amber-500",
-  "from-red-600 to-orange-500",
+  "from-brand-600 to-brand-800",
+  "from-gold-500 to-gold-700",
+  "from-brand-500 to-brand-700",
+  "from-gold-600 to-brand-700",
+  "from-brand-700 to-brand-900",
+  "from-gold-500 to-brand-600",
 ];
 
 /**
@@ -73,7 +73,7 @@ function SectionHeader({ eyebrow, title, icon, action }: { eyebrow: string; titl
   return (
     <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-600">
+        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-600">
           {icon} {eyebrow}
         </span>
         <h2 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{title}</h2>
@@ -117,24 +117,24 @@ export default function MarketplacePage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-orange-50/60 via-white to-white text-slate-950">
+    <main className="min-h-screen bg-gradient-to-b from-brand-50/50 via-white to-white text-slate-950">
       <SiteHeader />
 
       {/* 1. Hero Search */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-red-700 via-orange-600 to-amber-500 py-14 text-white sm:py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-gold-500 py-14 text-white sm:py-20">
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-yellow-300/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-gold-300/20 blur-3xl" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
           <Badge className="bg-white/20 text-white hover:bg-white/20">🇲🇿 O maior marketplace de importação de Moçambique</Badge>
           <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
             Compre o mundo.<br /> Entregue em Moçambique.
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/90 sm:text-xl">
-            Milhares de produtos da China com preço final, envio incluído e cada compra supervisionada pela Roseair — do pagamento à entrega.
+            Milhares de produtos da China com preço final, envio incluído e cada compra supervisionada pela Linkano — do pagamento à entrega.
           </p>
 
           <div className="mx-auto mt-8 flex max-w-2xl items-center gap-2 rounded-full bg-white p-2 shadow-2xl">
-            <Search className="ml-3 h-6 w-6 shrink-0 text-orange-500" />
+            <Search className="ml-3 h-6 w-6 shrink-0 text-brand-500" />
             <Input
               value={heroSearch}
               onChange={(e) => setHeroSearch(e.target.value)}
@@ -142,7 +142,7 @@ export default function MarketplacePage() {
               className="h-12 border-0 bg-transparent text-base text-slate-900 shadow-none focus-visible:ring-0"
               placeholder="Painéis solares, smartphones, peças auto..."
             />
-            <Button onClick={handleHeroSearch} className="h-12 shrink-0 rounded-full bg-gradient-to-r from-orange-600 to-red-600 px-6 text-sm font-bold hover:from-orange-700 hover:to-red-700">
+            <Button onClick={handleHeroSearch} className="h-12 shrink-0 rounded-full bg-brand-600 px-6 text-sm font-bold hover:bg-brand-700">
               Pesquisar
             </Button>
           </div>
@@ -164,9 +164,9 @@ export default function MarketplacePage() {
               <Link
                 key={cat}
                 to={`/marketplace?category=${encodeURIComponent(cat)}`}
-                className="group flex flex-col items-center gap-2 rounded-2xl border border-orange-100 bg-white p-3 text-center transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-lg"
+                className="group flex flex-col items-center gap-2 rounded-2xl border border-brand-100 bg-white p-3 text-center transition hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-100 to-red-100 text-orange-600 transition group-hover:from-orange-600 group-hover:to-red-600 group-hover:text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-gold-50 text-brand-600 transition group-hover:from-brand-600 group-hover:to-brand-800 group-hover:text-white">
                   <Icon className="h-6 w-6" />
                 </div>
                 <p className="line-clamp-2 text-[11px] font-semibold leading-tight text-slate-700">{cat}</p>
@@ -181,22 +181,22 @@ export default function MarketplacePage() {
         <div className="grid gap-4 lg:grid-cols-3">
           <Link
             to="/marketplace?category=Energia"
-            className="group relative col-span-2 flex min-h-[220px] flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-orange-600 via-red-600 to-rose-700 p-8 text-white shadow-xl"
+            className="group relative col-span-2 flex min-h-[220px] flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-600 to-gold-600 p-8 text-white shadow-xl"
           >
             <Sparkles className="pointer-events-none absolute right-8 top-8 h-24 w-24 text-white/15 transition group-hover:scale-110" />
             <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Campanha da Semana</Badge>
             <h3 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Energia Solar até -30%</h3>
-            <p className="mt-2 max-w-md text-white/90">Painéis, inversores e baterias prontos para envio, com preço final e supervisão Roseair.</p>
-            <span className="mt-4 inline-flex w-fit items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-bold text-red-700">Ver Ofertas →</span>
+            <p className="mt-2 max-w-md text-white/90">Painéis, inversores e baterias prontos para envio, com preço final e supervisão Linkano.</p>
+            <span className="mt-4 inline-flex w-fit items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-bold text-brand-700">Ver Ofertas →</span>
           </Link>
 
           <div className="grid grid-rows-2 gap-4">
-            <Link to="/marketplace?category=Electrónica" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-orange-600 p-6 text-white shadow-lg">
+            <Link to="/marketplace?category=Electrónica" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-gold-500 to-gold-700 p-6 text-white shadow-lg">
               <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Novidade</Badge>
               <h4 className="mt-2 text-xl font-extrabold">Electrónica Directa da China</h4>
               <span className="mt-2 text-xs font-bold text-white/90">Explorar →</span>
             </Link>
-            <Link to="/marketplace?category=Construção" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-rose-600 to-red-700 p-6 text-white shadow-lg">
+            <Link to="/marketplace?category=Construção" className="group relative flex flex-col justify-end overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white shadow-lg">
               <Badge className="w-fit bg-white/20 text-white hover:bg-white/20">Grandes Volumes</Badge>
               <h4 className="mt-2 text-xl font-extrabold">Materiais de Construção</h4>
               <span className="mt-2 text-xs font-bold text-white/90">Explorar →</span>
@@ -206,14 +206,14 @@ export default function MarketplacePage() {
       </section>
 
       {/* 4. Flash Deals */}
-      <section className="border-y border-orange-100 bg-gradient-to-r from-red-50 via-orange-50 to-amber-50 py-10">
+      <section className="border-y border-gold-100 bg-gradient-to-r from-gold-50 via-white to-brand-50/40 py-10">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeader
             eyebrow="Por tempo limitado"
             title="Ofertas Relâmpago"
             icon={<Timer className="h-4 w-4" />}
             action={
-              <span className="flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-xs font-bold text-white shadow-sm">
+              <span className="flex items-center gap-2 rounded-full bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-sm">
                 <Clock3 className="h-3.5 w-3.5" /> Termina em breve
               </span>
             }
@@ -274,7 +274,7 @@ export default function MarketplacePage() {
       </section>
 
       {/* 9. China Direct Imports */}
-      <section className="border-y border-red-100 bg-gradient-to-r from-red-700 via-red-600 to-orange-600 py-10 text-white">
+      <section className="border-y border-brand-100 bg-gradient-to-r from-brand-700 via-brand-600 to-brand-800 py-10 text-white">
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeader
             eyebrow="Sem intermediários"
@@ -293,7 +293,7 @@ export default function MarketplacePage() {
           {recentlyAdded.map((product) => <ProductCard key={product.id} product={product} />)}
         </div>
         <div className="mt-8 flex justify-center">
-          <Button asChild className="h-12 rounded-full bg-gradient-to-r from-orange-600 to-red-600 px-8 text-sm font-bold hover:from-orange-700 hover:to-red-700">
+          <Button asChild className="h-12 rounded-full bg-brand-600 px-8 text-sm font-bold hover:bg-brand-700">
             <Link to="/marketplace">Ver Catálogo Completo</Link>
           </Button>
         </div>
@@ -302,12 +302,12 @@ export default function MarketplacePage() {
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 md:flex-row">
           <div className="flex items-center gap-2 text-xs text-slate-400">
-            <ShieldCheck className="h-4 w-4 text-orange-600" />
-            Linkano — powered by Roseair. Pagamento, logística, armazenagem e desembaraço garantidos.
+            <ShieldCheck className="h-4 w-4 text-brand-600" />
+            Linkano — Compras sem Fronteira. Pagamento, logística, armazenagem e desembaraço garantidos.
           </div>
           <div className="flex items-center gap-4 text-xs text-slate-400">
-            <Link className="transition hover:text-orange-600" to="/buyer">A Minha Conta</Link>
-            <Link className="transition hover:text-orange-600" to="/agent">Vender no Linkano</Link>
+            <Link className="transition hover:text-brand-600" to="/buyer">A Minha Conta</Link>
+            <Link className="transition hover:text-brand-600" to="/agent">Vender no Linkano</Link>
           </div>
         </div>
       </footer>

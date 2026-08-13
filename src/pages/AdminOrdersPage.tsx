@@ -15,9 +15,9 @@ const formatCurrency = (value: number) =>
 
 const statusTone = (status: Order["status"]) => {
   if (status === "Delivered") return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100";
-  if (status === "Cancelled") return "bg-red-100 text-red-700 hover:bg-red-100";
-  if (status === "PendingPayment") return "bg-amber-100 text-amber-700 hover:bg-amber-100";
-  return "bg-red-50 text-red-700 hover:bg-red-50";
+  if (status === "Cancelled") return "bg-brand-100 text-brand-700 hover:bg-brand-100";
+  if (status === "PendingPayment") return "bg-gold-100 text-gold-700 hover:bg-gold-100";
+  return "bg-brand-50 text-brand-700 hover:bg-brand-50";
 };
 
 /** Order management + Bank Transfer manual reconciliation (BR-PAY-05, business-rules.md §6). */
@@ -42,19 +42,19 @@ export default function AdminOrdersPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-base font-black text-white shadow-sm">
               L
             </div>
             <div>
               <p className="text-lg font-bold tracking-tight">Linkano</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-brand-600">Powered by Linkano</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
             <Button asChild variant="outline" className="border-slate-300">
               <Link to="/admin">Painel de Admin</Link>
             </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
+            <Button asChild className="bg-brand-700 hover:bg-brand-800">
               <Link to="/">Marketplace</Link>
             </Button>
           </div>
@@ -63,11 +63,11 @@ export default function AdminOrdersPage() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Encomendas & Pagamentos</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Encomendas & Pagamentos</Badge>
           <h1 className="mt-4 text-4xl font-bold tracking-tight">Gestão de Encomendas</h1>
           <p className="mt-2 text-slate-600">
             Supervisione todas as encomendas da plataforma e reconcilie manualmente pagamentos por transferência bancária.
-            {pendingBankTransfers > 0 && <span className="ml-1 font-semibold text-amber-700">{pendingBankTransfers} aguardam confirmação.</span>}
+            {pendingBankTransfers > 0 && <span className="ml-1 font-semibold text-gold-700">{pendingBankTransfers} aguardam confirmação.</span>}
           </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -111,7 +111,7 @@ export default function AdminOrdersPage() {
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         <Badge className={statusTone(order.status)}>{orderStatusLabel(order.status)}</Badge>
-                        {order.isDisputed && <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">Em Disputa</Badge>}
+                        {order.isDisputed && <Badge className="bg-gold-100 text-gold-800 hover:bg-gold-100">Em Disputa</Badge>}
                       </div>
                     </div>
 
@@ -121,12 +121,12 @@ export default function AdminOrdersPage() {
                         <p className="font-medium">{Array.from(new Set(order.lines.map((l) => l.agent))).join(", ")}</p>
                       </div>
                       <div>
-                        <p className="flex items-center gap-1 text-xs text-slate-500"><Banknote className="h-3 w-3 text-red-700" /> Método</p>
+                        <p className="flex items-center gap-1 text-xs text-slate-500"><Banknote className="h-3 w-3 text-brand-700" /> Método</p>
                         <p className="font-medium">{order.paymentMethod}</p>
                       </div>
                       <div>
                         <p className="text-xs text-slate-500">Total</p>
-                        <p className="font-bold text-red-700">{formatCurrency(order.totalAmount)}</p>
+                        <p className="font-bold text-brand-700">{formatCurrency(order.totalAmount)}</p>
                       </div>
                       <div>
                         <p className="text-xs text-slate-500">Criada em</p>
@@ -145,7 +145,7 @@ export default function AdminOrdersPage() {
                       </Button>
                     )}
                     {order.status === "PendingPayment" && (
-                      <Button variant="outline" className="border-red-300 text-red-700 hover:bg-red-50" onClick={() => { cancelOrder(order.id, "Cancelada pela administração"); refresh(); }}>
+                      <Button variant="outline" className="border-brand-300 text-brand-700 hover:bg-brand-50" onClick={() => { cancelOrder(order.id, "Cancelada pela administração"); refresh(); }}>
                         <XCircle className="mr-1 h-4 w-4" /> Cancelar
                       </Button>
                     )}
@@ -158,7 +158,7 @@ export default function AdminOrdersPage() {
 
         {filtered.length === 0 && (
           <div className="rounded-2xl border border-dashed border-slate-300 p-12 text-center">
-            <PackageCheck className="mx-auto h-12 w-12 text-red-700" />
+            <PackageCheck className="mx-auto h-12 w-12 text-brand-700" />
             <h3 className="mt-4 text-xl font-semibold">Nenhuma encomenda encontrada</h3>
             <p className="mt-2 text-sm text-slate-500">Ajuste os filtros ou aguarde novas compras no marketplace.</p>
           </div>

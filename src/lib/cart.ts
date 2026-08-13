@@ -7,7 +7,7 @@ export type CartLine = {
 
 export type CartLineWithProduct = CartLine & { product: Product };
 
-const CART_KEY = "roseair_cart";
+const CART_KEY = "linkano_cart";
 
 function readCart(): CartLine[] {
   try {
@@ -19,7 +19,7 @@ function readCart(): CartLine[] {
 
 function writeCart(lines: CartLine[]) {
   localStorage.setItem(CART_KEY, JSON.stringify(lines));
-  window.dispatchEvent(new Event("roseair_cart_updated"));
+  window.dispatchEvent(new Event("linkano_cart_updated"));
 }
 
 export function getCart(): CartLine[] {

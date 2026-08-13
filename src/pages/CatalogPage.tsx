@@ -62,27 +62,27 @@ export default function CatalogPage() {
   };
 
   return (
-    <main className="min-h-screen bg-orange-50/30 text-slate-950">
+    <main className="min-h-screen bg-brand-50/30 text-slate-950">
       <SiteHeader />
 
-      <section className="border-b border-orange-100 bg-gradient-to-r from-orange-600 to-red-600 py-10 text-white">
+      <section className="border-b border-brand-100 bg-brand-600 py-10 text-white">
         <div className="mx-auto max-w-7xl px-6">
           <Badge className="bg-white/20 text-white hover:bg-white/20">Catálogo Linkano</Badge>
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-5xl">
             {category === "All" ? "Todos os Produtos" : category}
           </h1>
           <p className="mt-3 max-w-2xl text-white/90">
-            {filteredProducts.length} produtos prontos para importar, com preço final, envio incluído e supervisão Roseair.
+            {filteredProducts.length} produtos prontos para importar, com preço final, envio incluído e supervisão Linkano.
           </p>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[280px_1fr]">
         <aside className="space-y-5">
-          <Card className="border-orange-100 bg-white">
+          <Card className="border-brand-100 bg-white">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-lg">
-                <SlidersHorizontal className="h-5 w-5 text-orange-600" />
+                <SlidersHorizontal className="h-5 w-5 text-brand-600" />
                 Filtros
               </CardTitle>
             </CardHeader>
@@ -101,7 +101,7 @@ export default function CatalogPage() {
 
               <div>
                 <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Ship className="h-4 w-4 text-orange-600" /> Modo de frete
+                  <Ship className="h-4 w-4 text-brand-600" /> Modo de frete
                 </div>
                 <div className="space-y-3">
                   {freightModes.map((mode) => (
@@ -117,7 +117,7 @@ export default function CatalogPage() {
 
               <div>
                 <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <ShieldCheck className="h-4 w-4 text-orange-600" /> Prontidão aduaneira
+                  <ShieldCheck className="h-4 w-4 text-brand-600" /> Prontidão aduaneira
                 </div>
                 <div className="space-y-3">
                   {customsStatuses.map((status) => (
@@ -174,10 +174,10 @@ export default function CatalogPage() {
           {filteredProducts.length === 0 && (
             <Card className="border-dashed border-slate-300 bg-white">
               <CardContent className="flex flex-col items-center justify-center px-6 py-16 text-center">
-                <PackageCheck className="h-12 w-12 text-orange-600" />
+                <PackageCheck className="h-12 w-12 text-brand-600" />
                 <h3 className="mt-4 text-xl font-semibold">Nenhum produto correspondente</h3>
                 <p className="mt-2 max-w-md text-sm text-slate-500">Ajuste a sua pesquisa, categoria ou filtros para ver mais ofertas prontas para importar.</p>
-                <Button className="mt-6 bg-gradient-to-r from-orange-600 to-red-600" onClick={() => setSearch("")}>Limpar pesquisa</Button>
+                <Button className="mt-6 bg-brand-600" onClick={() => setSearch("")}>Limpar pesquisa</Button>
               </CardContent>
             </Card>
           )}

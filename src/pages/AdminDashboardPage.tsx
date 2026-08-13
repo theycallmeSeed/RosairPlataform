@@ -12,12 +12,12 @@ export default function AdminDashboardPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-base font-black text-white shadow-sm">
               L
             </div>
             <div>
               <p className="text-lg font-bold tracking-tight">Linkano</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-brand-600">Powered by Linkano</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
             <Button asChild variant="outline" className="border-slate-300">
               <Link to="/analytics">Analytics</Link>
             </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
+            <Button asChild className="bg-brand-700 hover:bg-brand-800">
               <Link to="/marketplace">Marketplace</Link>
             </Button>
           </div>
@@ -35,8 +35,8 @@ export default function AdminDashboardPage() {
       </header>
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Painel de Admin</Badge>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight">Controlo de Operações Roseair</h1>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Painel de Admin</Badge>
+          <h1 className="mt-4 text-4xl font-bold tracking-tight">Controlo de Operações Linkano</h1>
           <p className="mt-2 text-slate-600">Monitore utilizadores, anúncios, envios, desalfandegamento e capacidade de armazém.</p>
         </div>
       </section>
@@ -55,7 +55,7 @@ export default function AdminDashboardPage() {
             return (
               <Card key={String(label)} className="border-slate-200 bg-white">
                 <CardContent className="p-5">
-                  <KpiIcon className="h-5 w-5 text-red-700" />
+                  <KpiIcon className="h-5 w-5 text-brand-700" />
                   <p className="mt-4 text-2xl font-bold">{String(value)}</p>
                   <p className="mt-1 text-sm text-slate-500">{String(label)}</p>
                 </CardContent>
@@ -65,52 +65,52 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="mt-6 grid gap-5 md:grid-cols-3">
-          <Card className="border-red-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
+          <Card className="border-brand-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-700">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
                     <PackageSearch className="h-6 w-6" />
                   </div>
                   <h3 className="mt-5 text-xl font-semibold">Aprovação de Produtos</h3>
                   <p className="mt-2 text-sm text-slate-500">Reveja produtos submetidos pelos agentes e aprove antes da publicação no marketplace.</p>
                 </div>
               </div>
-              <Button asChild className="mt-6 w-full bg-red-700 hover:bg-red-800">
+              <Button asChild className="mt-6 w-full bg-brand-700 hover:bg-brand-800">
                 <Link to="/admin/products">Rever Produtos <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="border-red-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
+          <Card className="border-brand-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-700">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
                     <Ship className="h-6 w-6" />
                   </div>
                   <h3 className="mt-5 text-xl font-semibold">Encomendas & Pagamentos</h3>
                   <p className="mt-2 text-sm text-slate-500">Supervisione encomendas e reconcilie pagamentos por transferência bancária.</p>
                 </div>
               </div>
-              <Button asChild className="mt-6 w-full bg-red-700 hover:bg-red-800">
+              <Button asChild className="mt-6 w-full bg-brand-700 hover:bg-brand-800">
                 <Link to="/admin/orders">Gerir Encomendas <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="border-red-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
+          <Card className="border-brand-100 bg-white transition hover:-translate-y-1 hover:shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-700">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
                     <UserCheck className="h-6 w-6" />
                   </div>
                   <h3 className="mt-5 text-xl font-semibold">Aprovação de Agentes</h3>
                   <p className="mt-2 text-sm text-slate-500">Valide e aprove agentes que solicitaram registo no marketplace.</p>
                 </div>
               </div>
-              <Button asChild className="mt-6 w-full bg-red-700 hover:bg-red-800">
+              <Button asChild className="mt-6 w-full bg-brand-700 hover:bg-brand-800">
                 <Link to="/admin/agents">Aprovar Agentes <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </CardContent>
@@ -129,7 +129,7 @@ export default function AdminDashboardPage() {
                 "Vaga no armazém da Beira a 72% de ocupação",
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3 rounded-2xl border border-slate-200 p-4">
-                  <AlertTriangle className="h-5 w-5 text-red-700" />
+                  <AlertTriangle className="h-5 w-5 text-brand-700" />
                   <p className="font-medium">{item}</p>
                 </div>
               ))}
@@ -139,7 +139,7 @@ export default function AdminDashboardPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ClipboardCheck className="h-5 w-5 text-red-700" /> Utilização de Armazém
+                <ClipboardCheck className="h-5 w-5 text-brand-700" /> Utilização de Armazém
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">

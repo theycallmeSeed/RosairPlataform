@@ -14,9 +14,9 @@ const formatCurrency = (value: number) =>
 
 const statusTone: Record<AgentProduct["status"], string> = {
   Draft: "bg-slate-100 text-slate-600 hover:bg-slate-100",
-  Submitted: "bg-amber-100 text-amber-700 hover:bg-amber-100",
+  Submitted: "bg-gold-100 text-gold-700 hover:bg-gold-100",
   Published: "bg-emerald-100 text-emerald-700 hover:bg-emerald-100",
-  Rejected: "bg-red-100 text-red-700 hover:bg-red-100",
+  Rejected: "bg-brand-100 text-brand-700 hover:bg-brand-100",
 };
 
 /** Next fulfillment action an Agent can take on an order not yet Delivered/Cancelled (BR-ORD-01: strictly forward). */
@@ -50,12 +50,12 @@ export default function AgentDashboardPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 text-base font-black text-white shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-base font-black text-white shadow-sm">
               L
             </div>
             <div>
               <p className="text-lg font-bold tracking-tight">Linkano</p>
-              <p className="text-xs font-medium uppercase tracking-[0.22em] text-orange-600">Powered by Roseair</p>
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-brand-600">Powered by Linkano</p>
             </div>
           </Link>
           <div className="flex items-center gap-3">
@@ -68,7 +68,7 @@ export default function AgentDashboardPage() {
             <Button asChild variant="outline" className="border-slate-300">
               <Link to="/buyer">Comprador</Link>
             </Button>
-            <Button asChild className="bg-red-700 hover:bg-red-800">
+            <Button asChild className="bg-brand-700 hover:bg-brand-800">
               <Link to="/">Marketplace</Link>
             </Button>
           </div>
@@ -76,13 +76,13 @@ export default function AgentDashboardPage() {
       </header>
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Painel do Agente</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Painel do Agente</Badge>
           <div className="mt-4 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
               <h1 className="text-4xl font-bold tracking-tight">Operações do Agente</h1>
-              <p className="mt-2 text-slate-600">Gerir produtos submetidos à Roseair, encomendas recebidas e coordenação logística.</p>
+              <p className="mt-2 text-slate-600">Gerir produtos submetidos à Linkano, encomendas recebidas e coordenação logística.</p>
             </div>
-            <Button className="bg-red-700 hover:bg-red-800" onClick={() => navigate("/agent/new-product")}>
+            <Button className="bg-brand-700 hover:bg-brand-800" onClick={() => navigate("/agent/new-product")}>
               <PackagePlus className="mr-2 h-4 w-4" /> Submeter Produto
             </Button>
           </div>
@@ -93,7 +93,7 @@ export default function AgentDashboardPage() {
         <div className="grid gap-5 md:grid-cols-4">
           {[
             [Boxes, "Produtos publicados", String(publishedCount)],
-            [Clock3, "Aguardam aprovação Roseair", String(pendingCount)],
+            [Clock3, "Aguardam aprovação Linkano", String(pendingCount)],
             [Ship, "Encomendas em envio", String(shippingCount)],
             [TrendingUp, "Encomendas totais", String(orders.length)],
           ].map(([Icon, label, value]) => {
@@ -102,7 +102,7 @@ export default function AgentDashboardPage() {
             return (
               <Card key={String(label)} className="border-slate-200 bg-white">
                 <CardContent className="p-6">
-                  <KpiIcon className="h-5 w-5 text-red-700" />
+                  <KpiIcon className="h-5 w-5 text-brand-700" />
                   <p className="mt-4 text-3xl font-bold">{String(value)}</p>
                   <p className="mt-1 text-sm text-slate-500">{String(label)}</p>
                 </CardContent>
@@ -114,7 +114,7 @@ export default function AgentDashboardPage() {
         <Card className="mt-6 border-slate-200 bg-white">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ShoppingBag className="h-5 w-5 text-red-700" /> Encomendas Recebidas
+              <ShoppingBag className="h-5 w-5 text-brand-700" /> Encomendas Recebidas
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -137,7 +137,7 @@ export default function AgentDashboardPage() {
                     </Button>
                     {action && order.status !== "PendingPayment" && (
                       <Button
-                        className="bg-red-700 hover:bg-red-800"
+                        className="bg-brand-700 hover:bg-brand-800"
                         onClick={() => {
                           advanceOrderStatus(order.id, action.status);
                           refresh();
@@ -165,7 +165,7 @@ export default function AgentDashboardPage() {
                   <p className="font-semibold">{product.name}</p>
                   <p className="mt-0.5 text-xs text-slate-400">{product.id}</p>
                   {product.status === "Rejected" && product.rejectionReason && (
-                    <p className="mt-1 text-xs text-red-600">Motivo: {product.rejectionReason}</p>
+                    <p className="mt-1 text-xs text-brand-600">Motivo: {product.rejectionReason}</p>
                   )}
                 </div>
                 <Badge variant="outline">{product.category}</Badge>

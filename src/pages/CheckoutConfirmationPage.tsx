@@ -36,9 +36,9 @@ export default function CheckoutConfirmationPage() {
       <main className="min-h-screen bg-slate-50 text-slate-950">
         <SiteHeader />
         <section className="mx-auto max-w-3xl px-6 py-20 text-center">
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Encomenda não encontrada</Badge>
+          <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Encomenda não encontrada</Badge>
           <h1 className="mt-6 text-3xl font-bold tracking-tight">Não foi possível encontrar esta encomenda</h1>
-          <Button asChild className="mt-8 bg-red-700 hover:bg-red-800">
+          <Button asChild className="mt-8 bg-brand-700 hover:bg-brand-800">
             <Link to="/">Voltar ao Marketplace</Link>
           </Button>
         </section>
@@ -54,10 +54,10 @@ export default function CheckoutConfirmationPage() {
       <SiteHeader />
 
       <section className="mx-auto max-w-3xl px-6 py-16 text-center">
-        <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${isPending ? "bg-amber-100" : "bg-emerald-100"}`}>
-          {isPending ? <Clock3 className="h-10 w-10 text-amber-600" /> : <CheckCircle2 className="h-10 w-10 text-emerald-600" />}
+        <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-full ${isPending ? "bg-gold-100" : "bg-emerald-100"}`}>
+          {isPending ? <Clock3 className="h-10 w-10 text-gold-600" /> : <CheckCircle2 className="h-10 w-10 text-emerald-600" />}
         </div>
-        <Badge className={`mt-6 ${isPending ? "bg-amber-100 text-amber-700 hover:bg-amber-100" : "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"}`}>
+        <Badge className={`mt-6 ${isPending ? "bg-gold-100 text-gold-700 hover:bg-gold-100" : "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"}`}>
           {isPending ? "Aguarda Confirmação de Pagamento" : "Compra Confirmada"}
         </Badge>
         <h1 className="mt-4 text-4xl font-bold tracking-tight">
@@ -65,8 +65,8 @@ export default function CheckoutConfirmationPage() {
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600">
           {isPending
-            ? "Envie o comprovativo de transferência bancária. A Roseair confirma o pagamento manualmente e a encomenda avança automaticamente."
-            : "O pagamento foi confirmado. A Roseair já está a coordenar a operação com o(s) agente(s) responsáveis."}
+            ? "Envie o comprovativo de transferência bancária. A Linkano confirma o pagamento manualmente e a encomenda avança automaticamente."
+            : "O pagamento foi confirmado. A Linkano já está a coordenar a operação com o(s) agente(s) responsáveis."}
         </p>
       </section>
 
@@ -74,7 +74,7 @@ export default function CheckoutConfirmationPage() {
         <Card className="border-emerald-100 bg-white shadow-lg">
           <CardHeader className="border-b border-slate-100">
             <CardTitle className="flex items-center gap-2">
-              <Receipt className="h-5 w-5 text-red-700" /> Factura {invoice.invoiceNumber}
+              <Receipt className="h-5 w-5 text-brand-700" /> Factura {invoice.invoiceNumber}
               <Badge variant="outline" className="ml-auto text-[10px]">{invoice.status === "Finalized" ? "Final" : "Pró-forma"}</Badge>
             </CardTitle>
           </CardHeader>
@@ -99,7 +99,7 @@ export default function CheckoutConfirmationPage() {
             <Separator />
             <div className="flex items-center justify-between">
               <span className="font-semibold">Total Pago</span>
-              <span className="text-2xl font-bold text-red-700">{formatCurrency(invoice.totalAmount)}</span>
+              <span className="text-2xl font-bold text-brand-700">{formatCurrency(invoice.totalAmount)}</span>
             </div>
             <p className="text-sm text-slate-500">Método de pagamento: <span className="font-medium text-slate-800">{order.paymentMethod}</span></p>
 
@@ -107,26 +107,26 @@ export default function CheckoutConfirmationPage() {
               <p className="font-semibold">Próximos Passos</p>
               <ol className="mt-4 space-y-3 text-sm text-slate-600">
                 <li className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-700">1</span>
-                  {isPending ? "A Roseair confirma o pagamento após validar o comprovativo" : "O(s) agente(s) prepara(m) o envio dos produtos"}
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">1</span>
+                  {isPending ? "A Linkano confirma o pagamento após validar o comprovativo" : "O(s) agente(s) prepara(m) o envio dos produtos"}
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-700">2</span>
-                  Pode coordenar directamente com o agente via chat — a Roseair supervisiona a conversa
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">2</span>
+                  Pode coordenar directamente com o agente via chat — a Linkano supervisiona a conversa
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-700">3</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">3</span>
                   Acompanhe o estado do envio: frete, chegada ao porto e desalfandegamento
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-700">4</span>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-100 text-xs font-bold text-brand-700">4</span>
                   Recebe a encomenda no destino final
                 </li>
               </ol>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="flex-1 bg-red-700 hover:bg-red-800">
+              <Button asChild className="flex-1 bg-brand-700 hover:bg-brand-800">
                 <Link to={`/orders/${order.id}`}><PackageCheck className="mr-2 h-4 w-4" /> Ver Encomenda e Rastreio</Link>
               </Button>
               <Button asChild variant="outline" className="flex-1 border-slate-300">

@@ -128,7 +128,7 @@ export default function AnalyticsDashboardPage() {
         <div className="mx-auto max-w-7xl px-6 py-8">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
-              <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Analíticas Executivas</Badge>
+              <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">Analíticas Executivas</Badge>
               <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Inteligência de Procura do Marketplace</h1>
               <p className="mt-3 max-w-3xl text-slate-600">
                 Comportamento de pesquisa de compradores em tempo real, lacunas de fornecedores, procura por país e oportunidades de importação nos corredores comerciais de Moçambique e SADC.
@@ -136,7 +136,7 @@ export default function AnalyticsDashboardPage() {
             </div>
             <div className="flex gap-3">
               <Button variant="outline" className="border-slate-300">Exportar Relatório</Button>
-              <Button className="bg-red-700 hover:bg-red-800">Abrir Fluxo de Oportunidades</Button>
+              <Button className="bg-brand-700 hover:bg-brand-800">Abrir Fluxo de Oportunidades</Button>
             </div>
           </div>
         </div>
@@ -151,10 +151,10 @@ export default function AnalyticsDashboardPage() {
               <Card key={kpi.label} className="border-slate-200 bg-white">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-50 text-red-700">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
                       <KpiIcon className="h-5 w-5" />
                     </div>
-                    <Badge className="bg-red-50 text-red-700 hover:bg-red-50">{kpi.change}</Badge>
+                    <Badge className="bg-brand-50 text-brand-700 hover:bg-brand-50">{kpi.change}</Badge>
                   </div>
                   <p className="mt-5 text-3xl font-bold tracking-tight">{kpi.value}</p>
                   <p className="mt-1 text-sm font-medium text-slate-500">{kpi.label}</p>
@@ -170,7 +170,7 @@ export default function AnalyticsDashboardPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <CardTitle className="flex items-center gap-2">
-                    <Search className="h-5 w-5 text-red-700" /> Principais Pesquisas
+                    <Search className="h-5 w-5 text-brand-700" /> Principais Pesquisas
                   </CardTitle>
                   <p className="mt-2 text-sm text-slate-500">Pesquisas de produtos com maior intenção entre compradores do marketplace.</p>
                 </div>
@@ -190,10 +190,10 @@ export default function AnalyticsDashboardPage() {
                     <p className="font-semibold capitalize">{item.term}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Badge variant="outline">{item.category}</Badge>
-                      <Badge className="bg-red-50 text-red-700 hover:bg-red-50">{item.growth}</Badge>
+                      <Badge className="bg-brand-50 text-brand-700 hover:bg-brand-50">{item.growth}</Badge>
                     </div>
                   </div>
-                  <p className="flex items-center gap-2 text-sm text-slate-600"><MapPin className="h-4 w-4 text-red-700" /> {item.country}</p>
+                  <p className="flex items-center gap-2 text-sm text-slate-600"><MapPin className="h-4 w-4 text-brand-700" /> {item.country}</p>
                   <p className="text-sm font-bold">{item.searches.toLocaleString()}</p>
                   <p className="text-sm text-slate-600">{item.intent}</p>
                 </div>
@@ -206,7 +206,7 @@ export default function AnalyticsDashboardPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <CardTitle className="flex items-center gap-2">
-                    <LineChart className="h-5 w-5 text-red-700" /> Crescimento Mensal de Pesquisas
+                    <LineChart className="h-5 w-5 text-brand-700" /> Crescimento Mensal de Pesquisas
                   </CardTitle>
                   <p className="mt-2 text-sm text-slate-500">Crescimento de pesquisas e momentum de conversão de RFQs no marketplace.</p>
                 </div>
@@ -218,7 +218,7 @@ export default function AnalyticsDashboardPage() {
                 {monthlySearchGrowth.map((item) => (
                   <div key={item.month} className="flex h-full flex-col justify-end gap-3">
                     <div className="flex flex-1 items-end rounded-b-xl bg-white p-1 shadow-sm">
-                      <div className="w-full rounded-t-xl bg-red-700" style={{ height: `${(item.searches / maxSearches) * 100}%` }} />
+                      <div className="w-full rounded-t-xl bg-brand-700" style={{ height: `${(item.searches / maxSearches) * 100}%` }} />
                     </div>
                     <div className="text-center">
                       <p className="text-xs font-semibold text-slate-900">{item.month}</p>
@@ -245,7 +245,7 @@ export default function AnalyticsDashboardPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader className="border-b border-slate-100">
               <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-red-700" /> Produtos Sem Fornecedores
+                <AlertTriangle className="h-5 w-5 text-brand-700" /> Produtos Sem Fornecedores
               </CardTitle>
               <p className="text-sm text-slate-500">Sinais de procura onde a atividade do comprador excede a cobertura de agentes chineses ativos.</p>
             </CardHeader>
@@ -257,7 +257,7 @@ export default function AnalyticsDashboardPage() {
                       <p className="font-semibold">{item.product}</p>
                       <p className="mt-1 text-sm text-slate-500">{item.category}</p>
                     </div>
-                    <Badge className={item.urgency === "Crítico" ? "bg-red-100 text-red-800 hover:bg-red-100" : "bg-amber-100 text-amber-800 hover:bg-amber-100"}>
+                    <Badge className={item.urgency === "Crítico" ? "bg-brand-100 text-brand-800 hover:bg-brand-100" : "bg-gold-100 text-gold-800 hover:bg-gold-100"}>
                       {item.urgency}
                     </Badge>
                   </div>
@@ -272,7 +272,7 @@ export default function AnalyticsDashboardPage() {
                     </div>
                     <div className="rounded-xl bg-slate-50 p-3">
                       <p className="text-slate-500">Valor</p>
-                      <p className="font-bold text-red-700">{item.value}</p>
+                      <p className="font-bold text-brand-700">{item.value}</p>
                     </div>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function AnalyticsDashboardPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader className="border-b border-slate-100">
               <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-red-700" /> Procura por Categoria
+                <BarChart3 className="h-5 w-5 text-brand-700" /> Procura por Categoria
               </CardTitle>
               <p className="text-sm text-slate-500">Procura por categoria classificada por pesquisas, RFQs e oportunidade de importação estimada.</p>
             </CardHeader>
@@ -295,7 +295,7 @@ export default function AnalyticsDashboardPage() {
                       <p className="font-semibold">{item.category}</p>
                       <p className="text-sm text-slate-500">{item.searches.toLocaleString()} pesquisas • {item.rfqs} RFQs • {item.conversion}% conversão de RFQ</p>
                     </div>
-                    <p className="font-bold text-red-700">{item.opportunity}</p>
+                    <p className="font-bold text-brand-700">{item.opportunity}</p>
                   </div>
                   <Progress value={(item.searches / maxCategorySearches) * 100} className="h-2" />
                 </div>
@@ -308,7 +308,7 @@ export default function AnalyticsDashboardPage() {
           <Card className="border-slate-200 bg-white">
             <CardHeader className="border-b border-slate-100">
               <CardTitle className="flex items-center gap-2">
-                <Globe2 className="h-5 w-5 text-red-700" /> Procura por País
+                <Globe2 className="h-5 w-5 text-brand-700" /> Procura por País
               </CardTitle>
               <p className="text-sm text-slate-500">Concentração de procura do marketplace nos mercados compradores de Moçambique e SADC.</p>
             </CardHeader>
@@ -342,7 +342,7 @@ export default function AnalyticsDashboardPage() {
           <Card className="border-slate-200 bg-slate-950 text-white">
             <CardHeader className="border-b border-white/10">
               <CardTitle className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-red-300" /> Análises Executivas
+                <ShieldCheck className="h-5 w-5 text-brand-300" /> Análises Executivas
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 p-6">
@@ -357,7 +357,7 @@ export default function AnalyticsDashboardPage() {
                 return (
                   <div key={String(title)} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                     <div className="flex gap-3">
-                      <InsightIcon className="h-5 w-5 shrink-0 text-red-300" />
+                      <InsightIcon className="h-5 w-5 shrink-0 text-brand-300" />
                       <div>
                         <p className="font-semibold">{String(title)}</p>
                         <p className="mt-2 text-sm leading-6 text-slate-300">{String(text)}</p>
@@ -375,11 +375,11 @@ export default function AnalyticsDashboardPage() {
             <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <PackageSearch className="h-5 w-5 text-red-700" /> Oportunidades de Importação
+                  <PackageSearch className="h-5 w-5 text-brand-700" /> Oportunidades de Importação
                 </CardTitle>
-                <p className="mt-2 text-sm text-slate-500">Pipeline executivo de procura de alto valor do marketplace pronta para correspondência com agentes e execução comercial Roseair.</p>
+                <p className="mt-2 text-sm text-slate-500">Pipeline executivo de procura de alto valor do marketplace pronta para correspondência com agentes e execução comercial Linkano.</p>
               </div>
-              <Button className="bg-red-700 hover:bg-red-800">
+              <Button className="bg-brand-700 hover:bg-brand-800">
                 Priorizar Oportunidades <ArrowUpRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -390,13 +390,13 @@ export default function AnalyticsDashboardPage() {
                 <CardContent className="p-5">
                   <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
                     <div>
-                      <Badge className="bg-red-100 text-red-800 hover:bg-red-100">{opportunity.category}</Badge>
+                      <Badge className="bg-brand-100 text-brand-800 hover:bg-brand-100">{opportunity.category}</Badge>
                       <h3 className="mt-4 text-lg font-semibold leading-7">{opportunity.title}</h3>
-                      <p className="mt-2 flex items-center gap-2 text-sm text-slate-500"><MapPin className="h-4 w-4 text-red-700" /> {opportunity.country}</p>
+                      <p className="mt-2 flex items-center gap-2 text-sm text-slate-500"><MapPin className="h-4 w-4 text-brand-700" /> {opportunity.country}</p>
                     </div>
                     <div className="rounded-2xl bg-white px-4 py-3 text-right shadow-sm">
                       <p className="text-xs text-slate-500">Valor est.</p>
-                      <p className="text-xl font-bold text-red-700">{opportunity.value}</p>
+                      <p className="text-xl font-bold text-brand-700">{opportunity.value}</p>
                     </div>
                   </div>
 
@@ -412,7 +412,7 @@ export default function AnalyticsDashboardPage() {
                   </div>
 
                   <div className="mt-4 rounded-xl bg-white p-3 text-sm">
-                    <p className="text-slate-500">Camada de serviço Roseair</p>
+                    <p className="text-slate-500">Camada de serviço Linkano</p>
                     <p className="font-semibold">{opportunity.service}</p>
                   </div>
 
@@ -438,12 +438,12 @@ export default function AnalyticsDashboardPage() {
             const ActionIcon = Icon as typeof Building2;
 
             return (
-              <Card key={String(title)} className="border-red-100 bg-white">
+              <Card key={String(title)} className="border-brand-100 bg-white">
                 <CardContent className="p-6">
-                  <ActionIcon className="h-6 w-6 text-red-700" />
+                  <ActionIcon className="h-6 w-6 text-brand-700" />
                   <h3 className="mt-4 font-semibold">{String(title)}</h3>
                   <p className="mt-2 text-sm leading-6 text-slate-500">{String(text)}</p>
-                  <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-red-700">
+                  <div className="mt-4 flex items-center gap-2 text-sm font-semibold text-brand-700">
                     <CheckCircle2 className="h-4 w-4" /> Ação pronta para apresentação
                   </div>
                 </CardContent>

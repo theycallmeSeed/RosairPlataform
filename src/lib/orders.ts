@@ -73,7 +73,7 @@ export type Invoice = {
   totalAmount: number;
 };
 
-const ORDERS_KEY = "roseair_orders";
+const ORDERS_KEY = "linkano_orders";
 
 function readOrders(): Order[] {
   try {
@@ -85,7 +85,7 @@ function readOrders(): Order[] {
 
 function writeOrders(orders: Order[]) {
   localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  window.dispatchEvent(new Event("roseair_orders_updated"));
+  window.dispatchEvent(new Event("linkano_orders_updated"));
 }
 
 export function getOrders(): Order[] {

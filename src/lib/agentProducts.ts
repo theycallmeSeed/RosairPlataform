@@ -17,7 +17,7 @@ export type AgentProduct = {
   brand: string;
   model: string;
   originCountry: string;
-  /** Only the Agent's own supplier cost — Roseair adds freight/CBM/operational/commission before publishing (pricing-engine.md). */
+  /** Only the Agent's own supplier cost — Linkano adds freight/CBM/operational/commission before publishing (pricing-engine.md). */
   supplierCost: number;
   moq: number;
   monthlyCapacity: number;
@@ -32,7 +32,7 @@ export type AgentProduct = {
   createdAt: string;
 };
 
-const STORAGE_KEY = "roseair_agent_products";
+const STORAGE_KEY = "linkano_agent_products";
 
 export function loadAgentProducts(): AgentProduct[] {
   try {
@@ -68,7 +68,7 @@ export function rejectAgentProduct(id: string, reason: string) {
 
 export const agentProductStatusLabel: Record<AgentProductStatus, string> = {
   Draft: "Rascunho",
-  Submitted: "Aguarda Aprovação Roseair",
+  Submitted: "Aguarda Aprovação Linkano",
   Published: "Publicado",
   Rejected: "Rejeitado",
 };
