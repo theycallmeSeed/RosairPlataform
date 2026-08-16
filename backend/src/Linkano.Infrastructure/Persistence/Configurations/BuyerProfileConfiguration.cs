@@ -42,9 +42,20 @@ public sealed class BuyerProfileConfiguration : IEntityTypeConfiguration<BuyerPr
             .IsRequired(false);
 
         // database-design.md §2.1: "default_shipping_address JSONB" — a single JSON
-        // column, not one column per Address field.
+        // column, not one column per Address field. Each Address property is declared
+        // explicitly (rather than left to convention) because EF Core's owned-type/JSON
+        // materialization only binds Address's private constructor parameters to
+        // properties it already recognizes as mapped — without these, `street`, `city`,
+        // `province`, `country`, `postalCode` are left unmapped and the constructor
+        // cannot be bound (confirmed by direct diagnostic).
         builder.OwnsOne(bp => bp.DefaultShippingAddress, address =>
         {
+            address.Property(a => a.Street);
+            address.Property(a => a.City);
+            address.Property(a => a.Province);
+            address.Property(a => a.Country);
+            address.Property(a => a.PostalCode);
+
             address.ToJson("default_shipping_address");
         });
 
