@@ -18,6 +18,7 @@ Target: **PostgreSQL**, accessed via **EF Core**. This document maps `domain-mod
 - `agent_profiles` (id, user_id FK unique, company_legal_name, country_of_operation, approval_status, rejection_reason, approved_at, approved_by_user_id, created_at, updated_at)
 - `agent_verification_documents` (id, agent_profile_id FK, document_type, file_url, uploaded_at, reviewed_by_user_id, review_status)
 - `buyer_profiles` (id, user_id FK unique, company_name, tax_id, default_shipping_address JSONB, created_at, updated_at)
+- `refresh_tokens` (id, user_id FK, token_hash unique, expires_at, revoked_at nullable, replaced_by_token_id FK nullable self-referencing, created_at, updated_at)
 
 ### 2.2 Catalog
 - `categories` (id, name, slug unique, parent_category_id FK nullable, icon_url, sort_order)
@@ -57,7 +58,7 @@ Target: **PostgreSQL**, accessed via **EF Core**. This document maps `domain-mod
 
 See `domain-model.md §3` for the entity-relationship Mermaid diagram (identical structure, this section is its relational restatement):
 
-- `users` 1—0..1 `agent_profiles`, 1—0..1 `buyer_profiles`
+- `users` 1—0..1 `agent_profiles`, 1—0..1 `buyer_profiles`, 1—* `refresh_tokens`
 - `agent_profiles` 1—* `products`, 1—* `agent_verification_documents`
 - `categories` 1—* `products`, 1—0..1 `category_pricing_profiles`, self-referencing (`parent_category_id`)
 - `products` 1—* `product_prices` (versioned), 1—* `product_images`
@@ -76,12 +77,13 @@ Each aggregate root above maps to a transactional consistency boundary — a sin
 
 - Entities with user-facing history/audit value (`products`, `orders`, `agent_profiles`, `complaints`, `chat_messages`) use **soft delete**: a nullable `deleted_at` column + global EF Core query filter (`HasQueryFilter(e => e.DeletedAt == null)`), never a hard `DELETE`.
 - Purely operational/ephemeral data (`carts`, `cart_lines`) may be hard-deleted (e.g., abandoned cart cleanup job) since it carries no audit obligation.
+- `refresh_tokens` rows are never hard-deleted either, but don't use the `deleted_at` pattern above: `revoked_at` already marks a row inactive, and retaining revoked/rotated rows is what supports reuse-detection (`domain-model.md §2.1`). A background purge of long-expired rows is a Phase 2+ operational concern, not a soft-delete concern.
 - Rationale: financial/dispute-relevant records must remain queryable for audit, complaint resolution, and reporting even after a "delete" action (e.g., an Agent removing a product doesn't erase historical Orders referencing it).
 
 ## 6. Audit Strategy
 
 - **Row-level audit columns**: `created_at`, `updated_at` (and `created_by_user_id`/`updated_by_user_id` where the actor matters — approvals, status transitions, reconciliations) on every table, per §1.
-- **Append-only history tables** for specific high-value audit needs: `product_prices` (never mutated, `Superseded` status instead — `pricing-engine.md §7`), `tracking_events` (append-only log), `complaint_comments` (append-only).
+- **Append-only history tables** for specific high-value audit needs: `product_prices` (never mutated, `Superseded` status instead — `pricing-engine.md §7`), `tracking_events` (append-only log), `complaint_comments` (append-only), `refresh_tokens` (created once per issuance; only ever transitions once, from active to revoked/rotated — never updated back, never deleted).
 - **Generic audit log** (Phase 2 candidate): a cross-cutting `audit_logs` table (entity type, entity id, action, actor, before/after JSON diff, timestamp) populated via an EF Core `SaveChanges` interceptor, for admin actions not otherwise covered by a dedicated history table (e.g., Agent suspension, Category edits).
 
 ## 7. Concurrency Strategy
@@ -100,6 +102,7 @@ Baseline indexes beyond PK/FK (created at MVP):
 - `shipments (agent_id, status)` — Agent shipment queue.
 - `chat_messages (thread_id, sent_at)` — Thread pagination.
 - `complaints (order_id)`, `complaints (status)` — Support queue.
+- `refresh_tokens (user_id)` — revoke-all-for-user on logout/forced logout, list active sessions.
 
 Future (as scale demands, Phase 2+):
 - Full-text search index (PostgreSQL `tsvector` / `pg_trgm`) on `products (title, description)` for marketplace search relevance — MVP may start with a simpler `ILIKE`/trigram index before justifying a dedicated search engine (Elasticsearch/Meilisearch) at Phase 3.

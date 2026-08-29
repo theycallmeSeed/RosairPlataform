@@ -12,7 +12,7 @@ Backend: **ASP.NET Core 9**, C#, **Clean Architecture**, deployed initially as a
 src/
   Linkano.Domain/
     Common/                      # base entity, value objects, domain event base
-    Identity/                    # User, AgentProfile, BuyerProfile
+    Identity/                    # User, AgentProfile, BuyerProfile, RefreshToken
     Catalog/                     # Product, Category
     Pricing/                     # ExchangeRate, ProductPrice
     Ordering/                    # Cart, Order, OrderLine, Shipment, TrackingEvent

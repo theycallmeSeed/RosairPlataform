@@ -8,14 +8,12 @@ public sealed class BuyerProfile : AuditableEntity
         Guid id,
         Guid userId,
         string? companyName,
-        string? taxId,
-        Address? defaultShippingAddress)
+        string? taxId)
         : base(id)
     {
         UserId = userId;
         CompanyName = companyName;
         TaxId = taxId;
-        DefaultShippingAddress = defaultShippingAddress;
     }
 
     public Guid UserId { get; private set; }
@@ -32,7 +30,14 @@ public sealed class BuyerProfile : AuditableEntity
         string? taxId = null,
         Address? defaultShippingAddress = null)
     {
-        return new BuyerProfile(Guid.NewGuid(), userId, companyName, taxId, defaultShippingAddress);
+        var buyerProfile = new BuyerProfile(Guid.NewGuid(), userId, companyName, taxId);
+
+        if (defaultShippingAddress is not null)
+        {
+            buyerProfile.DefaultShippingAddress = defaultShippingAddress;
+        }
+
+        return buyerProfile;
     }
 
     public void UpdateCompanyDetails(string? companyName, string? taxId)
