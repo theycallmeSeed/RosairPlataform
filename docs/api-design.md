@@ -14,7 +14,30 @@ REST over HTTPS, JSON payloads, resource-oriented URLs, documented via **Swagger
 
 - **JWT Bearer tokens**. `POST /api/v1/auth/login` (email/phone + password) → `{ accessToken, refreshToken, expiresAt }`.
 - `POST /api/v1/auth/refresh` — rotates refresh token.
-- `POST /api/v1/auth/register/buyer`, `POST /api/v1/auth/register/agent` — role-specific registration; Agent registration creates an `AgentProfile` in `PendingReview` (cannot log in to seller functions until `Approved`, though the account itself can authenticate to check status).
+- `POST /api/v1/auth/register/buyer` — self-service Buyer registration.
+  - **Request body**:
+    ```json
+    {
+      "email": "string",
+      "phoneNumber": "string",
+      "password": "string",
+      "fullName": "string",
+      "companyName": "string?"
+    }
+    ```
+  - **Required fields**: `email`, `phoneNumber`, `password`, `fullName`.
+  - **Optional field**: `companyName` (nullable — for Buyer individuals per `domain-model.md §2.1`).
+  - **Behavior**: Creates a `User` with `Role = Buyer` and an associated `BuyerProfile` in a single transaction. Password is hashed before persistence. No email verification step in MVP.
+  - **Success response** (`201 Created`): Returns authentication tokens immediately (same shape as login):
+    ```json
+    {
+      "accessToken": "string",
+      "refreshToken": "string",
+      "expiresAt": "2026-07-29T14:30:00Z"
+    }
+    ```
+  - **Error responses**: `400` (validation failure), `409` (email or phoneNumber already registered).
+- `POST /api/v1/auth/register/agent` — role-specific registration; Agent registration creates an `AgentProfile` in `PendingReview` (cannot log in to seller functions until `Approved`, though the account itself can authenticate to check status).
 - Access token contains `sub` (UserId), `role`, `exp`; short-lived (e.g., 15 min), refresh token longer-lived and rotated on use, stored server-side (revocable) to allow forced logout (e.g., on Agent suspension).
 
 ## 4. Authorization

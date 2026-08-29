@@ -2,28 +2,31 @@
 
 This document walks through the primary end-to-end flows referenced across `business.md`, `business-rules.md`, and `modules.md`, at the level of screens/actions and system reactions.
 
-## 1. Buyer: Browse → Purchase → Delivery
+## 1. Buyer: Registration → Browse → Purchase → Delivery
 
 ```
-1. Buyer lands on Marketplace homepage (search-first, category nav, product cards)
-2. Buyer searches/filters → Product List
-3. Buyer opens Product Details (Marketplace Price shown; no raw supplier cost anywhere)
-4. Buyer adds to Cart (optionally from multiple Agents)
-5. Buyer proceeds to Checkout
+1. Buyer registers (email, phoneNumber, password, fullName, optional companyName)
+2. System creates User (Role = Buyer) + BuyerProfile in single transaction
+3. Password hashed; authentication tokens returned immediately (no email verification in MVP)
+4. Buyer lands on Marketplace homepage (search-first, category nav, product cards)
+5. Buyer searches/filters → Product List
+6. Buyer opens Product Details (Marketplace Price shown; no raw supplier cost anywhere)
+7. Buyer adds to Cart (optionally from multiple Agents)
+8. Buyer proceeds to Checkout
      -> System re-validates each cart line: product still Published, price still current (BR-PRD-09)
      -> Order created, Status = PendingPayment
-6. Buyer selects Payment Method (M-Pesa / e-Mola / Bank Transfer)
+9. Buyer selects Payment Method (M-Pesa / e-Mola / Bank Transfer)
      -> M-Pesa/e-Mola: redirected/prompted to gateway, near-real-time confirmation
      -> Bank Transfer: Buyer uploads proof of payment, Status = PendingPayment (awaiting manual reconciliation)
-7. Payment Confirmed -> Order.Status = PaymentConfirmed
-     -> Invoice finalized
-     -> Checkout Confirmation screen shown to Buyer
-     -> ChatThread(s) auto-created per fulfilling Agent (BR-CHT-01)
-8. Buyer coordinates via Chat with Agent(s) (Roseair supervises, read-all)
-9. Agent prepares shipment -> Order/Shipment.Status = PreparingShipment -> Shipped
-10. Buyer views Tracking (TrackingActive -> ArrivedAtPort -> CustomsClearance)
-11. Delivery -> Shipment/Order.Status = Delivered
-12. Buyer may raise a Complaint against the Order at any point from PaymentConfirmed onward
+10. Payment Confirmed -> Order.Status = PaymentConfirmed
+      -> Invoice finalized
+      -> Checkout Confirmation screen shown to Buyer
+      -> ChatThread(s) auto-created per fulfilling Agent (BR-CHT-01)
+11. Buyer coordinates via Chat with Agent(s) (Roseair supervises, read-all)
+12. Agent prepares shipment -> Order/Shipment.Status = PreparingShipment -> Shipped
+13. Buyer views Tracking (TrackingActive -> ArrivedAtPort -> CustomsClearance)
+14. Delivery -> Shipment/Order.Status = Delivered
+15. Buyer may raise a Complaint against the Order at any point from PaymentConfirmed onward
 ```
 
 ```mermaid
@@ -35,6 +38,8 @@ sequenceDiagram
     participant A as Agent
     participant T as Tracking
 
+    B->>MP: Register (email, phone, password, fullName)
+    MP-->>B: accessToken, refreshToken, expiresAt
     B->>MP: Search / Browse
     MP-->>B: Product results (Marketplace Price only)
     B->>MP: View Product Details
