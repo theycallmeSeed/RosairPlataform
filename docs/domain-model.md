@@ -46,6 +46,17 @@ Contexts communicate via well-defined application services / domain events in-pr
 
 > Design note: `AgentProfile`/`BuyerProfile` are separate entities rather than nullable columns on `User`, to keep `User` role-agnostic and avoid a wide, mostly-null table (see `database-design.md §Naming & Modeling Conventions`).
 
+**`RefreshToken`** (aggregate root)
+- `Id` (Guid)
+- `UserId` (FK → `User`)
+- `TokenHash` — hash of the opaque refresh-token value; the raw value is never persisted, only returned to the client once at issuance (mirrors `User.PasswordHash`)
+- `ExpiresAt`
+- `RevokedAt` (nullable)
+- `ReplacedByTokenId` (nullable, self-referencing FK → `RefreshToken`) — set when this token is rotated out in favor of a newly issued one
+- `CreatedAt`, `UpdatedAt`
+
+No stored `Status` field: active/expired/revoked/rotated state is derived from `RevokedAt`/`ExpiresAt`/`ReplacedByTokenId` at query time rather than persisted redundantly. `User` has a 1:N relationship to `RefreshToken` via `UserId`; `User` carries no corresponding navigation collection (resolved purely through the FK, consistent with how `BuyerProfile` relates to `User` above). This entity closes the gap between `api-design.md §3` (refresh tokens must be "stored server-side (revocable)") and this document, which previously defined no persistence model for that requirement.
+
 ### 2.2 Catalog Context
 
 **`Category`** (aggregate root)
@@ -157,6 +168,7 @@ No independent aggregates; this context consumes domain events / read replicas f
 erDiagram
     USER ||--o| AGENT_PROFILE : "has (if Agent)"
     USER ||--o| BUYER_PROFILE : "has (if Buyer)"
+    USER ||--o{ REFRESH_TOKEN : "authenticates via"
     AGENT_PROFILE ||--o{ PRODUCT : owns
     CATEGORY ||--o{ PRODUCT : classifies
     PRODUCT ||--o{ PRODUCT_PRICE : "has versions"
