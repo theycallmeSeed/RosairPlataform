@@ -1,6 +1,7 @@
 using Linkano.Application.Common.Interfaces;
 using Linkano.Infrastructure.Identity;
 using Linkano.Infrastructure.Persistence;
+using Linkano.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,11 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("LinkanoDb")));
 
         services.AddScoped<IRefreshTokenHasher, RefreshTokenHasher>();
+
+        services.AddScoped<IUserRepository, EfUserRepository>();
+        services.AddScoped<IBuyerProfileRepository, EfBuyerProfileRepository>();
+        services.AddScoped<IRefreshTokenRepository, EfRefreshTokenRepository>();
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
         // Identity (JWT/password hashing), Payments gateways, Pricing providers, Storage,
         // BackgroundJobs, and Logging wiring are registered here as each concern is implemented.
