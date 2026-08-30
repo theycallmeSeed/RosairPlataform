@@ -5,6 +5,7 @@ using Linkano.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Linkano.Infrastructure;
 
@@ -14,6 +15,9 @@ public static class DependencyInjection
     {
         services.AddDbContext<LinkanoDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("LinkanoDb")));
+
+        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddScoped<IRefreshTokenHasher, RefreshTokenHasher>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
