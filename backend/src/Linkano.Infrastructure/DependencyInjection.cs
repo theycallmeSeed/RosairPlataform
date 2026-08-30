@@ -16,6 +16,7 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("LinkanoDb")));
 
         services.AddScoped<IRefreshTokenHasher, RefreshTokenHasher>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         services.AddScoped<IUserRepository, EfUserRepository>();
         services.AddScoped<IBuyerProfileRepository, EfBuyerProfileRepository>();
