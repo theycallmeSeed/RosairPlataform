@@ -14,6 +14,9 @@ REST over HTTPS, JSON payloads, resource-oriented URLs, documented via **Swagger
 
 - **JWT Bearer tokens**. `POST /api/v1/auth/login` (email/phone + password) → `{ accessToken, refreshToken, expiresAt }`.
 - `POST /api/v1/auth/refresh` — rotates refresh token.
+  - Request body: `{ "refreshToken": "string" }`
+  - Success (200): `{ "accessToken": "string", "refreshToken": "string", "expiresAt": "2026-..." }`
+  - Error (401): Invalid, expired, revoked, or replayed refresh token.
 - `POST /api/v1/auth/register/buyer` — self-service Buyer registration.
   - **Request body**:
     ```json

@@ -21,7 +21,7 @@ public sealed class LinkanoDbContextFactory : IDesignTimeDbContextFactory<Linkan
     {
         var connectionString =
             Environment.GetEnvironmentVariable("ConnectionStrings__LinkanoDb")
-            ?? "Host=localhost;Port=5432;Database=linkano_dev;Username=postgres;Password=postgres";
+            ?? "Host=localhost;Port=5432;Database=linkano_dev;Username=postgres;Password=LinkanoDev@2026";
 
         var optionsBuilder = new DbContextOptionsBuilder<LinkanoDbContext>();
         optionsBuilder.UseNpgsql(connectionString);

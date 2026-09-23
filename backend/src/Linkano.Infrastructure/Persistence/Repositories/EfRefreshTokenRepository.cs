@@ -17,11 +17,8 @@ internal sealed class EfRefreshTokenRepository : EfRepository<RefreshToken>, IRe
             .FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<RefreshToken>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<RefreshToken?> GetRefreshTokenByHashAsync(string tokenHash, CancellationToken cancellationToken = default)
     {
         return await Context.Set<RefreshToken>()
-            .AsNoTracking()
-            .Where(rt => rt.UserId == userId)
-            .ToListAsync(cancellationToken);
+            .FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash, cancellationToken);
     }
-}

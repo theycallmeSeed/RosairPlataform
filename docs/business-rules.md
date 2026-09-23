@@ -115,6 +115,15 @@ Additional terminal/exception states: `Cancelled`, `Disputed`.
 - **BR-FUT-05**: Organization/multi-user Buyer accounts (company-level access with sub-users and spend limits) — Phase 4.
 - **BR-FUT-06**: Automated/rule-based Price approval for low-risk recalculations — Phase 3, pending defined risk thresholds from Roseair.
 
+## BR-TOK Refresh Token Rules
+
+- **BR-TOK-01**: Refresh tokens are rotated when consumed through `POST /api/v1/auth/refresh`.
+- **BR-TOK-02**: A refresh token that has already been replaced (`ReplacedByTokenId != null`) cannot be used again; presenting it returns HTTP 401.
+- **BR-TOK-03**: Each refresh token is single-use — after consumption, a new token is issued.
+- **BR-TOK-04**: Raw refresh tokens are never persisted; only their SHA-256 hash is stored in `TokenHash`.
+- **BR-TOK-05**: Login creates a new refresh-token session but does not rotate existing refresh tokens.
+- **BR-TOK-06**: A replayed/replaced refresh token returns HTTP 401. The MVP does not revoke other active sessions automatically.
+
 ## 13. Traceability
 
 Every rule above must have a corresponding automated test once implemented. Rule IDs should appear in commit messages / PR descriptions / test names when a change affects that rule (e.g., `BR-PRC-03`).
